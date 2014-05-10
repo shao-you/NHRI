@@ -1,0 +1,8 @@
+#control_config
+Freq_file//ASN,EUR,AFR,0
+Maxbit//for pedcut, default 20
+Cluster_file//ASN,EUR,AFR,0
+Create cluster file/Use local cluster file
+npl/pairs/qtl/deviates/vc//Linkage Analysis
+--markerNames//Linkage Analysis, to show markerNames or not
+
