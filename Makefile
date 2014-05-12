@@ -1,6 +1,6 @@
-all:stage1 main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_ped.o
-stage1:main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_ped.o
-	g++ -g -o stage1 main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_ped.o -lpthread
+all:stage1 main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o
+stage1:main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o
+	g++ -g -o stage1 main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o -lpthread
 main.o:main.cpp control.h
 	g++ -g -c main.cpp
 frequency.o:frequency.cpp control.h
@@ -23,8 +23,8 @@ handle_chr.o:handle_chr.cpp control.h
 	g++ -g -c handle_chr.cpp
 fam_alignment.o:fam_alignment.cpp control.h
 	g++ -g -c fam_alignment.cpp
-format_imputed_ped.o:format_imputed_ped.cpp control.h
-	g++ -g -c format_imputed_ped.cpp
+format_imputed_dat_ped.o:format_imputed_dat_ped.cpp control.h
+	g++ -g -c format_imputed_dat_ped.cpp
 clean:
 	rm *.o
 	rm stage1

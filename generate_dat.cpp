@@ -25,7 +25,7 @@ int generate_dat(int** chr, int num_of_chrs)//optimization: 可合併在count_ch
 			char* tmp = strtok(pattern, " 	,");
 		if(!tmp) break;
 			tmp = strtok(NULL, " 	,");
-			if(tmp) output_dat<<"M "<<tmp<<" "<<endl;
+			output_dat<<"M "<<tmp<<endl;
 		}
 		output_dat.close();
 	}

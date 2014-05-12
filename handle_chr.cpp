@@ -52,25 +52,31 @@ void* handle_chr(void* para)
 	cout<<"---------------------"<<endl;
 	//Generate cluster file
 	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --grid 5 --rsq 0.1 --cfreq --bits %d",chr,chr,20);
-	system(buffer);//參數有誤，應該不只一marker ??
-	//output: merlin-clusters.freq => CHR1.clusters ??
-	sprintf (buffer, "sudo cp merlin-clusters.freq CHR%d.clusters",chr);
+	system(buffer);
+	//output: merlin-clusters.freq, merlin-cluster-freqs.log, merlin-clusters.log
+	sprintf (buffer, "sudo cp merlin-clusters.freq CHR%d.clusters",chr);//merlin-clusters.freq => CHR3.clusters ??
 	system(buffer);
 	//===============================================
 	cout<<"---------------------"<<endl;
 	//Imputation
-	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --grid 5 --rsq 0.1 --cfreq --bits %d --infer --clusters CHR%d.clusters",chr,chr,20,chr);
+	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --bits %d --infer --clusters CHR%d.clusters",chr,chr,20,chr);
 	system(buffer);
 	//output: merlin-infer.dat, merlin-infer.ped
-	format_imputed_ped(PARA.ID_affect,chr);//merlin-infer.ped => CHR1_infer.ped
+	format_imputed_dat_ped(PARA.ID_affect,chr);//merlin-infer.ped => CHR3_infer.ped, merlin-infer.dat => CHR3_infer.dat ??
 	//===============================================
-	cout<<"---------------------"<<endl;//use CHR1_infer.ped ??
+	cout<<"---------------------"<<endl;//use CHR3_infer.ped ??
 	//Linkage Analysis
-	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --grid 5 --rsq 0.1 --cfreq --bits %d --clusters CHR%d.clusters --pairs --npl --markerNames > CHR%d_linkage.txt",chr,chr,20,chr,chr);
+	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --clusters CHR%d.clusters --pairs --npl --markerNames > CHR%d_linkage.txt",chr,chr,20,chr,chr);
 	system(buffer);
+	//output: CHR3_linkage.txt
 	//===============================================
 	//sprintf (buffer, "sudo rm -rf metadata%d.ped",chr);
 	//system(buffer);
 	//sprintf (buffer, "sudo rm -rf CHR%d.ped",chr);
 	//system(buffer);
+	//system("sudo rm -rf merlin-clusters.freq");
+	//system("sudo rm -rf merlin-cluster-freqs.log");
+	//system("sudo rm -rf merlin-clusters.log");
+	//system("sudo rm -rf merlin-infer.ped");
+	//system("sudo rm -rf merlin-infer.dat");
 }

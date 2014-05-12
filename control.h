@@ -75,4 +75,4 @@ int ftp();
 //handle_chr.cpp
 void* handle_chr(void* para);
 //format_imputed_ped.cpp
-void format_imputed_ped(map< pair<int,int>, int >* ID_affect, int chr);
+void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr);
