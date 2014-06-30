@@ -51,7 +51,7 @@ void* handle_chr(void* para)
 	int chr = (PARA.which_chr);
 	cout<<"---------------------"<<endl;
 	//Generate cluster file
-	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --grid 5 --rsq 0.1 --cfreq --bits %d",chr,chr,20);
+	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --grid 1 --rsq 0.1 --cfreq --bits %d",chr,chr,20);
 	system(buffer);
 	//output: merlin-clusters.freq, merlin-cluster-freqs.log, merlin-clusters.log
 	sprintf (buffer, "sudo cp merlin-clusters.freq CHR%d.clusters",chr);//merlin-clusters.freq => CHR3.clusters ??
@@ -69,6 +69,12 @@ void* handle_chr(void* para)
 	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --clusters CHR%d.clusters --pairs --npl --markerNames > CHR%d_linkage.txt",chr,chr,20,chr,chr);
 	system(buffer);
 	//output: CHR3_linkage.txt
+	//===============================================
+	cout<<"---------------------"<<endl;//use CHR3_infer.ped ??
+	//IBD sharing Analysis
+	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --extended --markerNames --grid 1",chr,chr,20);
+	system(buffer);
+	//output: merlin.s15
 	//===============================================
 	//sprintf (buffer, "sudo rm -rf metadata%d.ped",chr);
 	//system(buffer);
