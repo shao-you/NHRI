@@ -1,7 +1,7 @@
 #include "control.h"
 /********************************
 This program is to check whether the family needs to do pedcut 
-inputs: SubPedigrees.csv/PedsSummary.csv/all_digital_fam_align.fam
+inputs: SubPedigrees.csv/PedsSummary.csv/one_cluster_align.fam
 outputs: pedcut.fam
 tmp file: tmp.ped
 ********************************/
@@ -12,20 +12,20 @@ int find_corresponding(char* ID, map<string, int>& map_ID)
 	return it->second;
 }
 
-int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_mapping, map< pair<int,int>, int >& ID_affect)
+int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_mapping, map< pair<int,int>, int >& ID_affect,
+					vector<int>* align_info, vector<int>& one_cluster_info)
 //two times the number of non-founders minus the number of founders
 {	
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	char pattern1[CHAR_MAX_LENGTH+1]="";
-	ifstream all_digital_fam;
+	ifstream one_cluster;
 	ofstream pedcut_fam;
 	
-	all_digital_fam.open("all_digital_fam_align.fam",ios::in);
+	one_cluster.open("one_cluster.fam",ios::in);
 	pedcut_fam.open("pedcut.fam",ios::out);
 	
 	int maxbit = 20;//control_config
 	double threshold = maxbit/2;
-	int start_from = 0;//從哪一個人開始(依順序)
 	int new_famID_naming = num_of_families + 1;
 	//cout<<"num_of_families"<<num_of_families<<"====";getchar();
 	int total_people = 0;
@@ -43,7 +43,7 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 			//未來可用thread同步進行多個pedcut(需處理相同檔名輸出問題)
 			streamoff position_start;
 			streamoff position_end;
-			position_start = all_digital_fam.tellg();
+			position_start = one_cluster.tellg();
 			
 			map<string, int> map_ID;
 			map<string, int>::iterator it;
@@ -55,7 +55,7 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 			
 			for(int j=0;j<num_member;j++)
 			{
-				all_digital_fam.getline(pattern, CHAR_MAX_LENGTH);
+				one_cluster.getline(pattern, CHAR_MAX_LENGTH);
 				char* tmp = strtok(pattern, " ");
 				tmp = strtok(NULL, " ");
 				it = map_ID.find(tmp);//actually, ID is without repetition
@@ -63,14 +63,14 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				
 				order.push_back(j+1);//initialization
 			}
-			position_end = all_digital_fam.tellg();
-			all_digital_fam.clear();
-			all_digital_fam.seekg(position_start);//restore the position
+			position_end = one_cluster.tellg();
+			one_cluster.clear();
+			one_cluster.seekg(position_start);//restore the position
 
 			//re-ordering
 			for(int j=0;j<num_member;j++)
 			{
-				all_digital_fam.getline(pattern, CHAR_MAX_LENGTH);
+				one_cluster.getline(pattern, CHAR_MAX_LENGTH);
 				char* tmp = strtok(pattern, " ");
 				tmp = strtok(NULL, " ");//ID
 				it_ID = map_ID.find(tmp);
@@ -96,15 +96,15 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 					map_ID.erase(it_ID);//do not print out
 				}
 			}
-			all_digital_fam.clear();
-			all_digital_fam.seekg(position_start);//restore the position
+			one_cluster.clear();
+			one_cluster.seekg(position_start);//restore the position
 
 			ofstream tmp_ped;
 			tmp_ped.open("tmp.ped",ios::out);			
 			for(int j=0;j<order.size();j++)
 			{
 				int which_line = order[j];
-				for(int m=0;m<which_line;m++) all_digital_fam.getline(pattern, CHAR_MAX_LENGTH);
+				for(int m=0;m<which_line;m++) one_cluster.getline(pattern, CHAR_MAX_LENGTH);
 				strcpy(pattern1,pattern);//pattern1 is for strtok
 				char* tmp = strtok(pattern1, " ");
 				tmp = strtok(NULL, " ");//ID
@@ -116,8 +116,8 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				if(it != map_ID.end() && it1 == map_ID.end()) map_ID.erase(it_ID);//do not print out
 				else tmp_ped<<pattern<<endl;
 				
-				all_digital_fam.clear();
-				all_digital_fam.seekg(position_start);//restore the position
+				one_cluster.clear();
+				one_cluster.seekg(position_start);//restore the position
 			}
 			tmp_ped.close();
 			
@@ -156,8 +156,7 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 						cout<<tmp<<" ";
 						int ID = atoi(tmp);
 						int corr = find_corresponding(tmp,map_ID);
-						//cout<<"======="<<corr+start_from;
-						people_mapping.push_back(corr+start_from);//add the offset
+						people_mapping.push_back(align_info[i][corr-1]);//add the offset
 						
 						for(int jj=0;jj<4;jj++)
 						{
@@ -177,21 +176,19 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 					//cout<<num_people<<" people in this new family"<<endl;getchar();
 					new_famID_naming++;
 				}
-				start_from += num_member;
 				input_SubPedigrees.close();
 				input_PedsSummary.close();
 				system("sudo rm -rf SubPedigrees.csv");
 				system("sudo rm -rf PedsSummary.csv");
 				
-				all_digital_fam.clear();
-				all_digital_fam.seekg(position_end);
+				one_cluster.clear();
+				one_cluster.seekg(position_end);
 			}
 			else 
 			{
 				//goto pedcut_is_futile;
-				start_from += num_member;
-				all_digital_fam.clear();
-				all_digital_fam.seekg(position_end);
+				one_cluster.clear();
+				one_cluster.seekg(position_end);
 			}
 		}
 		else 
@@ -199,10 +196,9 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 		pedcut_is_futile:
 			for(int j=0;j<num_member;j++)
 			{
-				all_digital_fam.getline(pattern, CHAR_MAX_LENGTH);
+				one_cluster.getline(pattern, CHAR_MAX_LENGTH);
 				pedcut_fam<<pattern<<endl;
-				start_from++;
-				people_mapping.push_back(start_from);
+				people_mapping.push_back(align_info[i][j]);
 				
 				char* tmp = strtok(pattern, " ");//fam
 				int fam = atoi(tmp);//i
@@ -216,7 +212,7 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 		}
 	}
 	pedcut_fam.close();
-	all_digital_fam.close();
+	one_cluster.close();
 	system("sudo rm -rf tmp.ped");
 	return total_people;
 }
