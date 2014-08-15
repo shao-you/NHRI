@@ -337,7 +337,13 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 			
 			one_cluster<<ptr->fam<<" "<<ptr->id<<" "<<ptr->father_id<<" "<<ptr->mother_id<<" "
 					   <<ptr->sex<<" "<<ptr->affection<<" "<<endl;*/
-			if(ptr->affection == 1)//affected
+			/*
+			-9 missing 
+			0 missing
+			1 unaffected
+			2 affected
+			*/
+			if(ptr->affection == 2)//affected
 			{
 				affected_people[affected_count] = ptr;
 				affected_count++;
@@ -346,7 +352,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 		}
 		
 		int n=affected_count;
-		for(int i=1;i<n;i++)//只有個affected person不會存進set
+		for(int i=1;i<n;i++)//只有一個affected person不會存進set
 		{
 			for(int j=i+1;j<=n;j++)
 			{
