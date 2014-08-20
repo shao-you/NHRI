@@ -1,17 +1,20 @@
 #include "control.h"
 
-void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set)//notice thread race condition
+void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set)
 {
-	int num_of_pair = (*valid_pair_set).size();
+	double num_of_pair = (*valid_pair_set).size();
 	map<float, int> grid_pool;
 	
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream s15;
-	
+	ofstream notable_grid;
 	s15.open("merlin.s15",ios::in);
 	
-	streamoff position_start;
-	position_start = s15.tellg();
+	char buffer[50];
+		sprintf (buffer, "notable_grid_chr%d", chr);
+	notable_grid.open(buffer,ios::out);
+	//streamoff position_start;
+	//position_start = s15.tellg();
 	
 	s15.getline(pattern, CHAR_MAX_LENGTH);//first line is ignored
 	while(s15.eof() == false)
@@ -37,11 +40,18 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set)//not
 			|| (*valid_pair_set).find(pair2) != (*valid_pair_set).end())
 		{
 			for(int i=0;i<15;i++) tmp = strtok(NULL, " ");
-			if(atof(tmp) > IBD_threshold) grid_pool[grid_position]++;//add a pair with IBD sharing
+			if((1-atof(tmp)) > IBD_threshold) grid_pool[grid_position]++;//add a pair with IBD sharing
 		}
 	}
 	for(map<float, int>::iterator it=grid_pool.begin() ; it!=grid_pool.end() ; ++it)
-		if(it->second > Sharing_threshold*num_of_pair) cout<<"marker: "<<it->first<<endl;
-	
+	{
+		double rate = (double)it->second/num_of_pair;
+		if(rate > Sharing_threshold) 
+		{
+			//cout<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
+			notable_grid<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
+		}
+	}
 	s15.close();
+	notable_grid.close();
 }
