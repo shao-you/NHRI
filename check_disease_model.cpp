@@ -1,6 +1,6 @@
 #include "control.h"
 
-string parse_ped(int total_people, ifstream& ped_file, int offset, char minor_allele, char major_allele)
+string parse_ped(int total_people, ifstream& ped_file, long int offset, char minor_allele, char major_allele)
 {
 	//check recessive & dominant models
 	int missing_tolerace_people = (1-Missing_tolerance_threshold)*total_people;
@@ -103,7 +103,7 @@ void check_disease_model(int total_people, int chr)
 	
 	streamoff position_start;
 	position_start = ped_file.tellg();
-	int offset = 12;//first 6 columns
+	long int offset = 12;//first 6 columns
 	int marker_count = -1;
 
 	while(fre_result.eof() == false)//check a marker each time
@@ -154,3 +154,7 @@ void check_disease_model(int total_people, int chr)
 	ped_file.close();
 	valid_marker.close();
 }
+/*int main()
+{
+	check_disease_model(1378,3);
+}*/
