@@ -25,45 +25,53 @@ struct _IND_ {
 	//_IND_* sib = NULL;
 	_IND_* go_through = NULL;//link all people in the same cluster
 };
-bool check_common_ancector(_IND_* A, _IND_* B)
+bool check_common_ancector(_IND_* A, _IND_* B, const int max_people)
 {
+	//cout<<max_people<<endl;
 	//check父母關係 (需非父母關係, 隔代可)
 	if((A->father == B || A->mother == B) || (B->father == A || B->mother == A)) return false;
 	//check同源 (需同源)
-	vector<_IND_*> ancector_for_A;
-	vector<_IND_*> ancector_for_B;
-	ancector_for_A.push_back(A);
-	ancector_for_B.push_back(B);
+	vector<_IND_*> ancector_for_A(max_people);
+	vector<_IND_*> ancector_for_B(max_people);
+	int A_index = 0, B_index = 0;
 	
-	vector<_IND_*>::iterator it_A = ancector_for_A.begin();
-	while(it_A != ancector_for_A.end())
+	ancector_for_A[A_index++] = A;
+	ancector_for_B[B_index++] = B;
+
+	int count = 0;
+	while(count != A_index)
 	{
-		_IND_* ptr1 = (*it_A)->father;
-		_IND_* ptr2 = (*it_A)->mother;
+		_IND_* ptr1 = ancector_for_A[count]->father;
+		_IND_* ptr2 = ancector_for_A[count]->mother;
 		if(ptr1 != NULL && ptr2 != NULL) 
 		{
-			ancector_for_A.push_back(ptr1);
-			ancector_for_A.push_back(ptr2);
+			ancector_for_A[A_index] = ptr1;
+			ancector_for_A[A_index+1] = ptr2;
+			A_index += 2;
 		}
-		it_A++;
+		++count;
 	}
-	
-	vector<_IND_*>::iterator it_B = ancector_for_B.begin();
-	while(it_B != ancector_for_B.end())
+
+	count = 0;
+	while(count != B_index)
 	{
-		_IND_* ptr1 = (*it_B)->father;
-		_IND_* ptr2 = (*it_B)->mother;
+		_IND_* ptr1 = ancector_for_B[count]->father;
+		_IND_* ptr2 = ancector_for_B[count]->mother;
 		if(ptr1 != NULL && ptr2 != NULL) 
 		{
-			ancector_for_B.push_back(ptr1);
-			ancector_for_B.push_back(ptr2);
+			ancector_for_B[B_index] = ptr1;
+			ancector_for_B[B_index+1] = ptr2;
+			B_index += 2;
 		}
-		it_B++;
+		++count;
 	}
 	
-	for(vector<_IND_*>::iterator it1=ancector_for_A.begin()+1;it1!=ancector_for_A.end();it1++)
+	for(int i=0;i<A_index;i++)
+		for(int j=0;j<B_index;j++) if(ancector_for_A[i]==ancector_for_B[j]) return true;
+	
+	/*for(vector<_IND_*>::iterator it1=ancector_for_A.begin()+1;it1!=ancector_for_A.end();it1++)
 		for(vector<_IND_*>::iterator it2=ancector_for_B.begin()+1;it2!=ancector_for_B.end();it2++)
-			if(*it1 == *it2) return true;
+			if(*it1 == *it2) return true;*/
 	return false;
 }
 void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_pair_set)
@@ -118,6 +126,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 		int founder = num_member-non_founder;
 		int which_line = 0;
 		map<int, int> map_ID;
+		map_ID[0] = 0;
 		map<int, int>::iterator it;
 
 		_IND_* head = NULL;
@@ -357,7 +366,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 			for(int j=i+1;j<=n;j++)
 			{
 				//cout<<"("<<i<<","<<j<<") "<<endl;
-				bool result = check_common_ancector(affected_people[i-1],affected_people[j-1]);
+				bool result = check_common_ancector(affected_people[i-1],affected_people[j-1],total_member);
 				if(result) valid_pair_set.insert( 
 						make_pair(affected_people[i-1]->fam,make_pair(affected_people[i-1]->id,affected_people[j-1]->id)) );
 			}
@@ -374,6 +383,12 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 			delete tmp;
 		}
 	}
-	cout<<offset<<endl;
+	//cout<<offset<<endl;
 	pedcut_fam.close();
 }
+/*int main()
+{
+	set< pair<int, pair<int,int> > > valid_pair_set;
+	pedcut_fam_info(1383,valid_pair_set);
+	cout<<"successfully";
+}*/
