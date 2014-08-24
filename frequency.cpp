@@ -31,7 +31,7 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 	input_bim.open(BIM,ios::in);
 	output_fre.open("fre_result.freq",ios::out);
 	
-	bool external_freq_or_not = false;//ontrol_config
+	bool external_freq_or_not = true;//control_config
 	streamoff position;
 	if(external_freq_or_not == true)
 	{

@@ -1,6 +1,6 @@
 #include "control.h"
 
-void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set)
+void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int chr)
 {
 	double num_of_pair = (*valid_pair_set).size();
 	map<float, int> grid_pool;
@@ -46,7 +46,7 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set)
 	for(map<float, int>::iterator it=grid_pool.begin() ; it!=grid_pool.end() ; ++it)
 	{
 		double rate = (double)it->second/num_of_pair;
-		if(rate > Sharing_threshold) 
+		//if(rate > Sharing_threshold) 
 		{
 			//cout<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
 			notable_grid<<"position: "<<it->first<<" ,rate: "<<rate<<endl;

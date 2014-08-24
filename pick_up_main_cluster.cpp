@@ -1,9 +1,9 @@
 #include "control.h"
 
 struct _IND_ {
-	_IND_(int fam, int id, int father_id, int mother_id, int sex, int affection, _IND_* next):
+	_IND_(int fam, int id, int father_id, int mother_id, int sex, int affection, int which_line, _IND_* next):
 		fam(fam),id(id),father_id(father_id),mother_id(mother_id),
-		sex(sex),affection(affection),next(next){}
+		sex(sex),affection(affection),which_line(which_line),next(next){}
 	
 	int fam;
 	int id;
@@ -11,12 +11,14 @@ struct _IND_ {
 	int mother_id;//only one
 	int sex;
 	int affection;
+	
+	int which_line;
 	_IND_* next;
 	
 	_IND_* father = NULL;
 	_IND_* mother = NULL;
-	_IND_* spouse[50] = {NULL};// assume a person can have up to 5 spouses
-	_IND_* child[100] = {NULL};// assume a person can have up to 10 children
+	_IND_* spouse[5] = {NULL};// assume a person can have up to 5 spouses
+	_IND_* child[15] = {NULL};// assume a person can have up to 15 children
 	int num_spouse = 0;
 	int num_child = 0;
 	bool picked = false;
@@ -35,7 +37,7 @@ struct _IND_ {
 	int total_members;
 };*/
 
-void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will be changed (人數會增減)
+void pick_up_main_cluster(int** statistic, int num_of_families, vector<int>* align_info, vector<int>& one_cluster_info)//statistic will be changed (人數會增減)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream all_digital_fam;
@@ -44,14 +46,16 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 	all_digital_fam.open("all_digital_fam_align.fam",ios::in);
 	one_cluster.open("one_cluster.fam",ios::out);
 	_IND_* const_head;
+	int offset = 0;
 	
-	for(int i=1;i<=num_of_families;i++)//同一family會連續出現
+	for(int ii=1;ii<=num_of_families;ii++)//同一family會連續出現
 	{ 
-		int num_member = statistic[i][0];
-		int non_founder = statistic[i][1];
+		int num_member = statistic[ii][0];
+		int non_founder = statistic[ii][1];
 		int founder = num_member-non_founder;
-		
+		int which_line = 0;
 		map<int, int> map_ID;
+		map_ID[0] = 0;
 		map<int, int>::iterator it;
 
 		_IND_* head = NULL;
@@ -72,7 +76,8 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				int sex = atoi(tmp);
 			tmp = strtok(NULL, " ");
 				int affection = atoi(tmp);
-			head = new _IND_(fam,id,father_id,mother_id,sex,affection,head);
+			head = new _IND_(fam,id,father_id,mother_id,sex,affection,which_line,head);
+			which_line++;
 		}
 		const_head = head;
 		
@@ -88,7 +93,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				it = map_ID.find(pa);
 				if(it == map_ID.end()) 
 				{
-					const_head = new _IND_(head->fam,pa,0,0,1,-999,const_head);
+					const_head = new _IND_(head->fam,pa,0,0,1,-999,-999,const_head);
 					extra_people++;
 					map_ID[pa] = new_line_from;
 					new_line_from++;
@@ -97,7 +102,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				it = map_ID.find(ma);
 				if(it == map_ID.end()) 
 				{
-					const_head = new _IND_(head->fam,ma,0,0,2,-999,const_head);
+					const_head = new _IND_(head->fam,ma,0,0,2,-999,-999,const_head);
 					extra_people++;
 					map_ID[ma] = new_line_from;
 					new_line_from++;
@@ -106,7 +111,6 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 			head = head->next;
 		}
 		head = const_head;//refresh pointer
-		//num_member += extra_people;
 		
 		//initialization
 		const int total_founder = founder + extra_people;
@@ -153,10 +157,10 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 						else {head->father = tmp;head->mother = head2;}
 						//record the children
 						int num_child = head2->num_child;
-						if(num_child<10) {head2->child[num_child] = head;(head2->num_child)++;}
+						if(num_child<15) {head2->child[num_child] = head;(head2->num_child)++;}
 						
 						num_child = tmp->num_child;
-						if(num_child<10) {tmp->child[num_child] = head;(tmp->num_child)++;}
+						if(num_child<15) {tmp->child[num_child] = head;(tmp->num_child)++;}
 					}
 				}
 				head = head->next;
@@ -172,15 +176,18 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 		_IND_* head3 = const_head;
 		_IND_* go_through_start[total_founder];//max is total_founder
 		int number_of_each_cluster[total_founder];
+		int non_founder_of_each_cluster[total_founder];
 		while(count < total_member)//a round for a cluster
 		{
 			int num_of_people = 0;
+			int num_of_founder = 0;
 			_IND_* go_through_end = NULL;
 			while(head3)
 			{
 				if(head3->picked == false)//not yet linked
 				{
 					go_through_start[which_cluster] = go_through_end = head3;
+					if(go_through_end->father_id==0 && go_through_end->mother_id==0) num_of_founder++;//founder
 					go_through_end->picked = true;
 					num_of_people++;
 					break;
@@ -191,14 +198,24 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 			
 			while(go_through_end)
 			{
-				if(!(go_through_end->father_id==0 && go_through_end->mother_id==0))//non-founder, link parents
+				if(go_through_end->father_id==0 && go_through_end->mother_id==0) {}//founder
+				else//non-founder, link parents
 				{
-					if((go_through_end->father)->picked==false && (go_through_end->mother)->picked==false)
+				    if((go_through_end->father)->picked == false)
 					{
-						(go_through_end->father)->picked = (go_through_end->mother)->picked = true;
-						(go_through_end->father)->go_through = go_through_end->mother;
+						if((go_through_end->father)->father_id==0 && (go_through_end->father)->mother_id==0) num_of_founder++;
+						(go_through_end->father)->picked = true;
+						(go_through_end->father)->go_through = go_through_end->go_through;
 						go_through_end->go_through = go_through_end->father;
-						num_of_people += 2;
+						num_of_people++;
+					}
+					if((go_through_end->mother)->picked == false)
+					{
+						if((go_through_end->mother)->father_id==0 && (go_through_end->mother)->mother_id==0) num_of_founder++;
+						(go_through_end->mother)->picked = true;
+						(go_through_end->mother)->go_through = go_through_end->go_through;
+						go_through_end->go_through = go_through_end->mother;
+						num_of_people++;
 					}
 				}
 				int num = go_through_end->num_spouse;
@@ -206,6 +223,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				{
 					if((go_through_end->spouse[i])->picked == false)
 					{
+						if((go_through_end->spouse[i])->father_id==0 && (go_through_end->spouse[i])->mother_id==0) num_of_founder++;
 						(go_through_end->spouse[i])->picked = true;
 						(go_through_end->spouse[i])->go_through = go_through_end->go_through;
 						go_through_end->go_through = go_through_end->spouse[i];
@@ -217,6 +235,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				{
 					if((go_through_end->child[i])->picked == false)
 					{
+						if((go_through_end->child[i])->father_id==0 && (go_through_end->child[i])->mother_id==0) num_of_founder++;
 						(go_through_end->child[i])->picked = true;
 						(go_through_end->child[i])->go_through = go_through_end->go_through;
 						go_through_end->go_through = go_through_end->child[i];
@@ -226,6 +245,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 				go_through_end = go_through_end->go_through;
 			}
 			number_of_each_cluster[which_cluster] = num_of_people;
+			non_founder_of_each_cluster[which_cluster] = num_of_people-num_of_founder;
 			count += num_of_people;
 			which_cluster++;
 		}
@@ -239,23 +259,26 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 		
 		//print out for checking
 		//if(extra_people != 0) 
-		if(num_member != max)
-			{cout<<const_head->fam<<"=="<<num_member<<"==="<<max;getchar();}
+		//if(num_member != max)
+			//{cout<<const_head->fam<<"=="<<num_member<<"==="<<max<<"==="<<(num_member-max);offset+=(num_member-max);getchar();}
 		//cout<<num_member<<" "<<extra_people<<" "<<which_cluster<<" "<<max<<endl;//getchar();
 		
 		//output new fam file
 		_IND_* ptr = go_through_start[which_one];
+		//align_info, one_cluster_info
 		while(ptr)
 		{
+			if(ptr->which_line != -999) one_cluster_info.push_back(align_info[ii][ptr->which_line]);
+			else one_cluster_info.push_back(-999);
+			
 			one_cluster<<ptr->fam<<" "<<ptr->id<<" "<<ptr->father_id<<" "<<ptr->mother_id<<" "
-					   <<ptr->sex<<" "<<ptr->affection<<endl;
+					   <<ptr->sex<<" "<<ptr->affection<<" "<<endl;
 			ptr = ptr->go_through;
 		}
 		
 		//reset statistic
-		statistic[i][0];
-		statistic[i][1];
-
+		statistic[ii][0] = number_of_each_cluster[which_one];//add "extra_people" num_member, non_founder is not changing
+		statistic[ii][1] = non_founder_of_each_cluster[which_one];
 		//delete individuals
 		while(const_head)
 		{
@@ -264,6 +287,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families)//statistic will 
 			delete tmp;
 		}
 	}
+	//cout<<offset<<endl;
 	all_digital_fam.close();
 	one_cluster.close();
 }

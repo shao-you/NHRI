@@ -6,3 +6,6 @@ Create cluster file/Use local cluster file
 npl/pairs/qtl/deviates/vc//Linkage Analysis
 --markerNames//Linkage Analysis, to show markerNames or not
 
+IBD_sharing 0/1
+Disease_model d/r/0
+

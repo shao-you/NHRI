@@ -3,7 +3,7 @@
 void* handle_chr(void* para)
 {
 	struct parameter PARA = *((struct parameter*)para);
-	//cout<<(*PARA.mapping).size()<<" == "<<(PARA.which_chr)<<" == "<<(PARA.marker_num)<<endl;//1666
+	//cout<<(*PARA.mapping).size()<<" == "<<(PARA.which_chr)<<" == "<<(PARA.marker_num)<<endl;//1367, 3, 1000
 	//=============================
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	
@@ -32,17 +32,25 @@ void* handle_chr(void* para)
 		output_ped<<pattern;
 		
 		int which_line = (*PARA.mapping)[i];
-		int num_ahead_char = (which_line-1)*4;
-		
-		for(int j=0;j<num_marker;j++)
+		if(which_line == -999)
 		{
-			input_ped.getline(pattern, CHAR_MAX_LENGTH);
-			output_ped<<pattern[num_ahead_char]<<" "<<pattern[num_ahead_char+2]<<" ";
+			for(int j=0;j<num_marker;j++) output_ped<<"0 0 ";
+			output_ped<<endl;
 		}
-		output_ped<<endl;			
-		
-		input_ped.clear();
-		input_ped.seekg(position_start);
+		else
+		{
+			int num_ahead_char = (which_line-1)*4;
+			
+			for(int j=0;j<num_marker;j++)
+			{
+				input_ped.getline(pattern, CHAR_MAX_LENGTH);
+				output_ped<<pattern[num_ahead_char]<<" "<<pattern[num_ahead_char+2]<<" ";
+			}
+			output_ped<<endl;
+			
+			input_ped.clear();
+			input_ped.seekg(position_start);
+		}
 	}
 	input_fam.close();
 	input_ped.close();
@@ -51,30 +59,39 @@ void* handle_chr(void* para)
 	int chr = (PARA.which_chr);
 	cout<<"---------------------"<<endl;
 	//Generate cluster file
-	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --grid 1 --rsq 0.1 --cfreq --bits %d",chr,chr,20);
-	system(buffer);
+	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --rsq 0.1 --cfreq --bits %d",chr,chr,Maxbit);
+	//system(buffer);
 	//output: merlin-clusters.freq, merlin-cluster-freqs.log, merlin-clusters.log
 	sprintf (buffer, "sudo cp merlin-clusters.freq CHR%d.clusters",chr);//merlin-clusters.freq => CHR3.clusters ??
-	system(buffer);
+	//system(buffer);
 	//===============================================
-	cout<<"---------------------"<<endl;
+	cout<<"---------------------"<<endl;//time consuming
 	//Imputation
-	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --bits %d --infer --clusters CHR%d.clusters",chr,chr,20,chr);
-	system(buffer);
+	sprintf (buffer, "merlin -d CHR%d.dat -m new_map.map -f fre_result.freq -p CHR%d.ped --bits %d --infer --clusters CHR%d.clusters",chr,chr,Maxbit,chr);
+	//system(buffer);
 	//output: merlin-infer.dat, merlin-infer.ped
-	format_imputed_dat_ped(PARA.ID_affect,chr);//merlin-infer.ped => CHR3_infer.ped, merlin-infer.dat => CHR3_infer.dat ??
+	//format_imputed_dat_ped(PARA.ID_affect,chr);//merlin-infer.ped => CHR3_infer.ped, merlin-infer.dat => CHR3_infer.dat ??
 	//===============================================
 	cout<<"---------------------"<<endl;//use CHR3_infer.ped ??
 	//Linkage Analysis
-	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --clusters CHR%d.clusters --pairs --npl --markerNames > CHR%d_linkage.txt",chr,chr,20,chr,chr);
-	system(buffer);
+	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --grid 1 --bits %d --clusters CHR%d.clusters --pairs --npl --markerNames > CHR%d_linkage.txt",chr,chr,Maxbit,chr,chr);
+	//system(buffer);
 	//output: CHR3_linkage.txt
 	//===============================================
 	cout<<"---------------------"<<endl;//use CHR3_infer.ped ??
 	//IBD sharing Analysis
-	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --extended --markerNames --grid 1",chr,chr,20);
+	sprintf (buffer, "merlin -d CHR%d_infer.dat -m new_map.map -f fre_result.freq -p CHR%d_infer.ped --bits %d --extended --markerNames --grid 1",chr,chr,Maxbit);
 	system(buffer);
+	IBD_sharing_Analysis(PARA.valid_pair_set,chr);//output: notable_grid_chr3
 	//output: merlin.s15
+	//===============================================
+	cout<<"---------------------"<<endl;
+	check_disease_model(size,chr);//check recessive & dominant models
+	//output: valid_marker_chr3
+	//===============================================
+	cout<<"---------------------"<<endl;
+	//restore_ped(chr);
+	//output: restore_chr3.ped
 	//===============================================
 	//sprintf (buffer, "sudo rm -rf metadata%d.ped",chr);
 	//system(buffer);

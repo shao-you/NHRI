@@ -86,7 +86,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 	
 	int statistic[total_people][2];//index is from 1 ~ num_of_families
 	for(int i=0;i<total_people;i++) statistic[i][0]=statistic[i][1]=0;
-	
+
 	int num_of_families = 0;
 	int current_family = 0;
 	while(pedcut_fam.eof() == false)
@@ -119,10 +119,10 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 	_IND_* const_head;
 	int offset = 0;
 	
-	for(int i=1;i<=num_of_families;i++)//同一family會連續出現
+	for(int ii=1;ii<=num_of_families;ii++)//同一family會連續出現
 	{ 
-		int num_member = statistic[i][0];
-		int non_founder = statistic[i][1];
+		int num_member = statistic[ii][0];
+		int non_founder = statistic[ii][1];
 		int founder = num_member-non_founder;
 		int which_line = 0;
 		map<int, int> map_ID;
@@ -341,7 +341,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 		int affected_count = 0;
 		while(ptr)
 		{
-			/*if(ptr->which_line != -999) one_cluster_info.push_back(align_info[i][ptr->which_line]);
+			/*if(ptr->which_line != -999) one_cluster_info.push_back(align_info[ii][ptr->which_line]);
 			else one_cluster_info.push_back(-999);
 			
 			one_cluster<<ptr->fam<<" "<<ptr->id<<" "<<ptr->father_id<<" "<<ptr->mother_id<<" "
@@ -373,8 +373,8 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 		}
 
 		//reset statistic
-		statistic[i][0] = number_of_each_cluster[which_one];//add "extra_people" num_member, non_founder is not changing
-		statistic[i][1] = non_founder_of_each_cluster[which_one];
+		statistic[ii][0] = number_of_each_cluster[which_one];//add "extra_people" num_member, non_founder is not changing
+		statistic[ii][1] = non_founder_of_each_cluster[which_one];
 		//delete individuals
 		while(const_head)
 		{
@@ -389,6 +389,6 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 /*int main()
 {
 	set< pair<int, pair<int,int> > > valid_pair_set;
-	pedcut_fam_info(1383,valid_pair_set);
-	cout<<"successfully";
+	pedcut_fam_info(1367,valid_pair_set);
+	cout<<"successfully"<<endl;
 }*/
