@@ -2,28 +2,57 @@
 
 void compare_genotype(vector<char>& result, int line, ifstream& infer_ped)
 {
-	char pattern[CHAR_MAX_LENGTH+1]="";
-	for(int i=0;i<line;i++) infer_ped.getline(pattern, CHAR_MAX_LENGTH+1);//buffer size may overflow ?
+	int flag;
+	if(result.size() == 0) flag = 0;//first time 
+	else flag = 1;
 	
-	if(result.size() == 0)//first time 
-	{	
-		char* tmp = strtok(pattern, " ");
-		while(tmp)
-		{
-			result.push_back(tmp[0]);
-			tmp = strtok(NULL, " ");
-		}
-	}
-	else
+	char pattern[CHAR_MAX_LENGTH+1]="";
+	for(int i=0;i<line-1;i++)
 	{
+		do{
+			infer_ped.clear();
+			infer_ped.getline(pattern, CHAR_MAX_LENGTH+1);
+		}while((infer_ped.rdstate() & std::ifstream::failbit ) != 0);
+	}
+	{//targeted line
 		int index = 0;
-		char* tmp = strtok(pattern, " ");
-		while(tmp)
-		{
-			if(result[index] != tmp[0]) result[index] = '.';//., A, T, C, G, 1, 2
-			tmp = strtok(NULL, " ");
-			index++;
-		}
+		int round = 1;
+		do{
+			infer_ped.clear();
+			infer_ped.getline(pattern, CHAR_MAX_LENGTH+1);
+			if(round == 1)
+			{
+				char* tmp = strtok(pattern, " ");
+				for(int i=0;i<6;i++) tmp = strtok(NULL, " ");
+				while(tmp)
+				{
+					if(flag == 0) result.push_back(tmp[0]);
+					else//flag == 1 
+					{
+						if(result[index] != tmp[0]) result[index] = '.';//., A, T, C, G, 1, 2
+						index++;
+					}
+					tmp = strtok(NULL, " ");
+				}
+				round++;
+			}
+			else
+			{
+				char* tmp = strtok(pattern, " ");
+				while(tmp)
+				{
+					if(flag == 0) result.push_back(tmp[0]);
+					else//flag == 1  
+					{
+						if(result[index] != tmp[0]) result[index] = '.';//., A, T, C, G, 1, 2
+						index++;						
+					}
+					tmp = strtok(NULL, " ");
+				}
+			}
+		}while((infer_ped.rdstate() & std::ifstream::failbit ) != 0);
+		//The failbit flag is set if the function extracts no characters, or if the delimiting 
+		//character is not found once (n-1) characters have already been written to s.
 	}
 }
 void restore_ped(vector<int>* mapping, int chr, int num_marker)
