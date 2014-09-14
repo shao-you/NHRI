@@ -3,7 +3,7 @@
 This program is to generate MERLIN map file from bim file.
 ********************************/
 
-int map_modify()
+void map_modify()
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream input_map;
@@ -27,5 +27,4 @@ int map_modify()
 	
 	input_map.close();
 	output_new_map.close();
-	return 0;
 }

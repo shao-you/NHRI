@@ -126,8 +126,8 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				start_from += num_member;
 				input_SubPedigrees.close();
 				input_PedsSummary.close();
-				system("sudo rm -rf SubPedigrees.csv");
-				system("sudo rm -rf PedsSummary.csv");
+				system("rm -rf SubPedigrees.csv");
+				system("rm -rf PedsSummary.csv");
 				
 				one_cluster.clear();
 				one_cluster.seekg(position_end);
@@ -166,6 +166,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 	pedcut_fam.close();
 	one_cluster.close();
 	family_pedcut_info.close();
-	system("sudo rm -rf tmp.ped");
+	system("rm -rf tmp.ped");
 	return total_people;
 }

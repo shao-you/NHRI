@@ -20,10 +20,10 @@
 
 #define max_num_of_family 2000
 #define max_chr 46//23 pairs
-#define CHAR_MAX_LENGTH 9999//max accommodate 40000 people
+#define CHAR_MAX_LENGTH 10000//max accommodate 40000 people
 using namespace std;
 
-#define Maxbit 20
+#define Maxbit 24
 //original files
 #define BED 					"chr3_1000.bed"//"chr135_merge.bed"//
 #define BIM 					"chr3_1000.bim"//"chr135_merge.bim"//
@@ -64,9 +64,9 @@ int count_people();
 //void switch_allele(char* str);
 void frequency(int total_people, int** chr, int num_of_chrs);
 //map_modify.cpp
-int map_modify();
+void map_modify();
 //generate_dat.cpp
-int generate_dat(int** chr, int num_of_chrs);
+void generate_dat(int** chr, int num_of_chrs);
 //count_chr_number.cpp
 int count_chr_number(int** chr);//return # of chr
 //do_map.cpp
@@ -81,7 +81,7 @@ void fam_alignment(vector<int>* align_info, int num_of_families);
 int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_mapping,
 					map< pair<int,int>, int >& ID_affect, vector<int>& one_cluster_info);
 //ftp.cpp
-int ftp();
+void ftp();
 //handle_chr.cpp
 void* handle_chr(void* para);
 //format_imputed_ped.cpp
@@ -94,3 +94,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int chr);
 //check_disease_model.cpp
 void check_disease_model(int total_people, int chr);
+//restore_ped.cpp
+void restore_ped(vector<int>* mapping, int chr, int num_marker);
+//merge_ped.cpp
+void merge_ped(int** chr, int num_of_chrs);

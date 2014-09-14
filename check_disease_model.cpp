@@ -98,7 +98,7 @@ void check_disease_model(int total_people, int chr)
 	char buffer[50];
 		sprintf (buffer, "CHR%d.ped", chr);
 	ped_file.open(buffer,ios::in);
-		sprintf (buffer, "valid_marker_chr%d", chr);
+		sprintf (buffer, "dir_%d/valid_marker_chr%d", chr, chr);
 	valid_marker.open(buffer,ios::out);
 	
 	streamoff position_start;

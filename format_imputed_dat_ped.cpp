@@ -5,13 +5,15 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream merlin_ped, merlin_dat;
 	ofstream infer_ped, infer_dat;
-	
-	merlin_ped.open("merlin-infer.ped",ios::in);
-	merlin_dat.open("merlin-infer.dat",ios::in);
 	char buffer[50];
-		sprintf (buffer, "CHR%d_infer.ped", chr);
+		sprintf (buffer, "dir_%d/merlin-infer.ped", chr);
+	merlin_ped.open(buffer,ios::in);
+		sprintf (buffer, "dir_%d/merlin-infer.dat", chr);
+	merlin_dat.open(buffer,ios::in);
+
+		sprintf (buffer, "dir_%d/CHR%d_infer.ped", chr, chr);
 	infer_ped.open(buffer,ios::out);
-		sprintf (buffer, "CHR%d_infer.dat", chr);
+		sprintf (buffer, "dir_%d/CHR%d_infer.dat", chr, chr);
 	infer_dat.open(buffer,ios::out);
 	
 	infer_dat<<"A "<<"disease"<<endl;

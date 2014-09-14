@@ -9,7 +9,7 @@ clock_t start, stop, exe_time;
 start = clock(); //開始時間
 	ifstream control_file;
 	control_file.open("control_config",ios::in);
-	//parse_control_file();//------------------------------------------------------
+	//parse_control_file();//??
 	//===============================================
 	cout<<"==========0=========="<<endl;
 exe_time = clock();	
@@ -114,7 +114,7 @@ cout << ((double)(exe_time)) / CLOCKS_PER_SEC <<endl;
 	thread end!!!
 	for each chromosome
 	*******************/
-	//merge_files();
+	merge_ped(chr,num_of_chrs);
 	//===============================================
 	cout<<"==========11=========="<<endl;
 	for(int i=1;i<=num_of_families;i++) delete [] statistic[i];
@@ -122,7 +122,6 @@ cout << ((double)(exe_time)) / CLOCKS_PER_SEC <<endl;
 	for(int i=0;i<num_of_chrs;i++) delete [] chr[i];
 	delete [] chr;
 	cout<<"Successfully End!!"<<endl;
-	//system("ls");
 	control_file.close();
 stop = clock(); //結束時間
 cout <<"總共時間"<<((double)(stop - start)) / CLOCKS_PER_SEC <<endl;//getchar();

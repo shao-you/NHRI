@@ -3,7 +3,7 @@
 This program is to generate dat file of each chromosome.
 ********************************/
 
-int generate_dat(int** chr, int num_of_chrs)//optimization: 可合併在count_chr_number
+void generate_dat(int** chr, int num_of_chrs)//optimization: 可合併在count_chr_number.cpp
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream input_map;
@@ -30,5 +30,4 @@ int generate_dat(int** chr, int num_of_chrs)//optimization: 可合併在count_ch
 		output_dat.close();
 	}
 	input_map.close();
-	return 0;
 }

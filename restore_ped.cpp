@@ -64,10 +64,12 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker)
 	
 	char buffer[50];
 	//計算少了哪些marker
-		sprintf (buffer, "CHR%d_infer.dat", chr);
+		sprintf (buffer, "dir_%d/CHR%d_infer.dat", chr, chr);
 	infer_dat.open(buffer,ios::in);
 		sprintf (buffer, "CHR%d.dat", chr);
 	original_dat.open(buffer,ios::in);
+	//if(infer_dat.is_open()) cout<<"OK1"<<endl;
+	//if(original_dat.is_open()) cout<<"OK2"<<endl;
 	
 	vector<int> index_reduced_marker;
 	original_dat.getline(pattern, CHAR_MAX_LENGTH+1);//ignore first line
@@ -107,14 +109,16 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker)
 	original_dat.close();
 	
 	//把infer_ped內容與original fam結合
-		sprintf (buffer, "CHR%d_infer.ped", chr);
+		sprintf (buffer, "dir_%d/CHR%d_infer.ped", chr, chr);
 	infer_ped.open(buffer,ios::in);
-	original_fam.open("all_digit.fam",ios::in);//not aligned
+	original_fam.open("all_digital.fam",ios::in);//not aligned
 		sprintf (buffer, "metadata%d.ped", chr);
 	input_ped.open(buffer,ios::in);
-		sprintf (buffer, "restore_chr%d.ped", chr);
+		sprintf (buffer, "dir_%d/restore_chr%d.ped", chr, chr);
 	restore_ped.open(buffer,ios::out);
-	
+	//if(infer_ped.is_open()) cout<<"OK3"<<endl;
+	//if(original_fam.is_open()) cout<<"OK4"<<endl;
+	//if(restore_ped.is_open()) cout<<"OK5"<<endl;
 	streamoff position_start2 = input_ped.tellg();
 	streamoff position_start3 = infer_ped.tellg();
 	
@@ -122,13 +126,19 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker)
 	int which_line = 1;
 	while(original_fam.eof() == false)//an original person each time
 	{
+		//cout<<which_line<<endl;
 		original_fam.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
-		restore_ped<<pattern;
+		//restore_ped<<pattern;
 		char* tmp = strtok(pattern, " ");
 	if(!tmp) break;	
 		vector<char> result;
 		for(int i=0;i<total_people_after_pedcut;i++) 
-			if((*mapping)[i] == which_line) compare_genotype(result,i+1,infer_ped);
+			if((*mapping)[i] == which_line) 
+			{
+				compare_genotype(result,i+1,infer_ped);
+				infer_ped.clear();
+				infer_ped.seekg(position_start3);
+			}
 		
 		if(result.size() == 0)//依照原來內容填入(不存在於pedcut fam的人)
 		{
@@ -158,8 +168,6 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker)
 			}
 		}
 		restore_ped<<endl;
-		infer_ped.clear();
-		infer_ped.seekg(position_start3);
 		which_line++;
 	}
 	infer_ped.close();
@@ -167,3 +175,12 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker)
 	input_ped.close();
 	restore_ped.close();
 }
+/*int main()
+{
+	int size = 1371;
+	srand(time(NULL));
+	
+	vector<int> mapping;
+	for(int i=0;i<size;i++) mapping.push_back((rand()%size)+1);
+	restore_ped(&mapping,3,1000);
+}*/

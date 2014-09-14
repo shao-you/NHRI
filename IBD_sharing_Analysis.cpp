@@ -8,10 +8,11 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream s15;
 	ofstream notable_grid;
-	s15.open("merlin.s15",ios::in);
 	
 	char buffer[50];
-		sprintf (buffer, "notable_grid_chr%d", chr);
+		sprintf (buffer, "dir_%d/merlin.s15", chr);
+	s15.open(buffer,ios::in);
+		sprintf (buffer, "dir_%d/notable_grid_chr%d", chr, chr);
 	notable_grid.open(buffer,ios::out);
 	//streamoff position_start;
 	//position_start = s15.tellg();

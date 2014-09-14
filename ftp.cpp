@@ -84,7 +84,7 @@ int pasv_connect(struct sockaddr_in	sa, int control_sock)
     }
 	return data_sock;
 }
-int ftp()
+void ftp()
 {
     int			rc;            /* system calls return value storage */
     int         control_sock, data_sock;             /* socket descriptor */
@@ -201,7 +201,7 @@ int ftp()
 		if (pFile==NULL)
 		{
 			cerr << "Data cannot be opened correctly.";
-			return 0;
+			return ;
 		}
 		//memset(buf,0,sizeof(buf));
 		while((result = recv(data_sock,buf,BUFLEN,0)) > 0)
@@ -237,5 +237,4 @@ int ftp()
 	cout<<"======<successfully end!>====="<<endl;
 	//getchar();
     *pc = '\0';
-    return 0;
 }

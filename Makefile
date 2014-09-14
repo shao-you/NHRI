@@ -3,8 +3,8 @@ Opt = -O3
 Warning = -w
 #http://a7419.pixnet.net/blog/post/57931682-gcc%E5%8F%83%E6%95%B8%E8%A9%B3%E8%A7%A3
 #http://stackoverflow.com/questions/9150397/warning-ignoring-return-value-of-system-c
-stage:main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o pick_up_main_cluster.o pedcut_fam_info.o IBD_sharing_Analysis.o check_disease_model.o restore_ped.o
-	g++ -o stage main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o pick_up_main_cluster.o pedcut_fam_info.o IBD_sharing_Analysis.o check_disease_model.o restore_ped.o -lpthread
+stage:main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o pick_up_main_cluster.o pedcut_fam_info.o IBD_sharing_Analysis.o check_disease_model.o restore_ped.o merge_ped.o
+	g++ -o stage main.o frequency.o map_modify.o generate_dat.o count_chr_number.o do_map.o calculate_maxbit.o ftp.o count_people.o handle_chr.o fam_alignment.o format_imputed_dat_ped.o pick_up_main_cluster.o pedcut_fam_info.o IBD_sharing_Analysis.o check_disease_model.o restore_ped.o merge_ped.o -lpthread
 main.o:main.cpp control.h
 	g++ -c $(Opt)$(Warning) main.cpp
 frequency.o:frequency.cpp control.h
@@ -39,6 +39,8 @@ check_disease_model.o:check_disease_model.cpp control.h
 	g++ -c $(Opt)$(Warning) check_disease_model.cpp
 restore_ped.o:restore_ped.cpp control.h
 	g++ -c $(Opt)$(Warning) restore_ped.cpp
+merge_ped.o:merge_ped.cpp control.h
+	g++ -c $(Opt)$(Warning) merge_ped.cpp
 clean:
 	rm *.o
 	rm -rf stage
