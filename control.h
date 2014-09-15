@@ -23,25 +23,11 @@
 #define CHAR_MAX_LENGTH 10000//max accommodate 40000 people
 using namespace std;
 
-#define Maxbit 24
+#define Maxbit 20
 //original files
 #define BED 					"chr3_1000.bed"//"chr135_merge.bed"//
 #define BIM 					"chr3_1000.bim"//"chr135_merge.bim"//
 #define FAM 					"chr3_1000.fam"//"chr135_merge.fam"//
-#define FREQ 					"ASN_freq.txt"
-
-//generated files
-#define _freq       			"fre_result.freq"
-//#define _meta 					"metadadaX.ped"
-#define _new_map 				"new_map.map"
-#define _dat 					"map.dat"
-#define _pedcut_fam 			"pedcut.fam"
-#define _all_digital_fam 		"all_digital.fam"
-#define _tmp_ped 				"tmp.ped"
-#define _SubPedigrees 			"SubPedigrees.csv"
-#define _PedsSummary 			"PedsSummary.csv"
-//#define _chr_ped					"CHRX.ped"
-#define _all_digital_align_fam 	all_digital_fam_align.fam
 
 #define IBD_threshold 0.5
 #define Sharing_threshold 0.8
