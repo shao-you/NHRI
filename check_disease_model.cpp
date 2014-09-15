@@ -155,7 +155,7 @@ void check_disease_model(int total_people, int chr)
 	ped_file.close();
 	valid_marker.close();
 }
-int main()
+/*int main()
 {
 	check_disease_model(1355,3);
-}/**/
+}*/
