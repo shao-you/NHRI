@@ -55,7 +55,6 @@ struct parameter
 	vector<int>* mapping;
 	int** chr;
 	int chr_index;
-	int marker_num;
 	map< pair<int,int>, int >* ID_affect;
 	set< pair<int, pair<int,int> > >* valid_pair_set;
 };
