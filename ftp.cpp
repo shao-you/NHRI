@@ -84,7 +84,7 @@ int pasv_connect(struct sockaddr_in	sa, int control_sock)
     }
 	return data_sock;
 }
-void ftp()
+bool ftp(char* file_name)
 {
     int			rc;            /* system calls return value storage */
     int         control_sock, data_sock;             /* socket descriptor */
@@ -93,6 +93,7 @@ void ftp()
     struct sockaddr_in	sa;            /* Internet address struct */
     struct hostent*     hen; 	       /* host-to-IP translation */
 	size_t result;
+	bool con_state = true;
     /* check there are enough parameters */
     /*if (argc < 2) {
 	fprintf(stderr, "Missing host name\n");
@@ -180,8 +181,10 @@ void ftp()
 	cout<<buf<<endl;//226 Directory send OK./**/
 	//======================================================
 	cout<<"please enter the file name you want to download: ";
-	char filename[100];
-	fgets(filename, 50, stdin);//max = 50-1
+	char filename[150];
+	//fgets(filename, 150, stdin);//max = 150-1
+	cin.getline(filename,sizeof(filename));
+	strcpy(file_name,filename);
 	
 	data_sock = pasv_connect(sa,control_sock);
 	memset(buf,0,sizeof(buf));
@@ -201,7 +204,7 @@ void ftp()
 		if (pFile==NULL)
 		{
 			cerr << "Data cannot be opened correctly.";
-			return ;
+			return false;
 		}
 		//memset(buf,0,sizeof(buf));
 		while((result = recv(data_sock,buf,BUFLEN,0)) > 0)
@@ -220,6 +223,7 @@ void ftp()
 	{
 		cout<<"Some errors occur. You may enter the wrong file name."<<endl;
 		close(data_sock);
+		con_state = false;
 	}
 	//======================================================
 	//close connection
@@ -237,4 +241,12 @@ void ftp()
 	cout<<"======<successfully end!>====="<<endl;
 	//getchar();
     *pc = '\0';
+	return con_state;
 }
+/*int main()
+{
+	char file_name[150];
+	bool result = ftp(file_name);
+	if(result) cout<<file_name<<endl;
+	else cout<<"Not OK"<<endl;
+}*/

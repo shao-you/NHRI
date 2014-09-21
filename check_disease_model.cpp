@@ -1,6 +1,12 @@
 #include "control.h"
 
-string parse_ped(int total_people, ifstream& ped_file, int marker_count, char minor_allele, char major_allele)
+bool check_marker(int marker, vector<int>& index_reduced_marker)
+{
+	int size = index_reduced_marker.size();
+	for(int i=0;i<size;i++) if(index_reduced_marker[i] == marker) return true;
+	return false;
+}
+string parse_ped(int total_people, ifstream& ped_file, int offset_count, char minor_allele, char major_allele)
 {//minor_allele,major_allele不為'0'
 	//check recessive & dominant models
 	int missing_tolerance_people = (1-Missing_tolerance_threshold)*total_people;
@@ -22,7 +28,7 @@ string parse_ped(int total_people, ifstream& ped_file, int marker_count, char mi
 	if(!tmp) break;	
 		for(int i=0;i<5;i++) tmp = strtok(NULL, " ");
 		int affection = atoi(tmp);
-		streamoff offset = ((tmp+strlen(tmp)+1) - pattern) + marker_count*4;
+		streamoff offset = ((tmp+strlen(tmp)+1) - pattern) + offset_count*4;
 		ped_file.clear();
 		ped_file.seekg(start);
 		ped_file.seekg(offset, ped_file.cur);
@@ -90,7 +96,7 @@ string parse_ped(int total_people, ifstream& ped_file, int marker_count, char mi
 	else if(flag_recessive==false && flag_dominant==true) return " d";
 	else return " d r";//flag_recessive==true && flag_dominant==true
 }
-void check_disease_model(int total_people, int chr)
+void check_disease_model(int total_people, int chr, vector<int>& index_reduced_marker)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream fre_result, ped_file;
@@ -99,18 +105,21 @@ void check_disease_model(int total_people, int chr)
 	fre_result.open("fre_result.freq",ios::in);
 	
 	char buffer[50];
-		sprintf (buffer, "CHR%d.ped", chr);
+		if(Impute == 1) sprintf (buffer, "dir_%d/CHR%d_infer.ped", chr, chr);
+		else if(Impute == 0) sprintf (buffer, "CHR%d.ped", chr);
 	ped_file.open(buffer,ios::in);
 		sprintf (buffer, "dir_%d/valid_marker_chr%d", chr, chr);
 	valid_marker.open(buffer,ios::out);
 	
 	streamoff position_start;
 	position_start = ped_file.tellg();
-	int marker_count = -1;
-
+	int marker_count = 0;
+	int offset_count = -1;
+	
 	while(fre_result.eof() == false)//check a marker each time
 	{
 		marker_count++;
+		offset_count++;
 		char first_allele, second_allele;
 		double first_rate, second_rate;
 		char minor_allele, major_allele;
@@ -127,7 +136,12 @@ void check_disease_model(int total_people, int chr)
 		tmp = strtok(NULL, " ");
 		first_rate = atof(tmp);
 		
-		if(first_rate == 1.0) {valid_marker<<marker<<" u"<<endl;continue;}//don't need to do the checking
+		if(first_rate == 1.0)//don't need to do the checking 
+		{
+			if(Impute == 1)
+				if(check_marker(marker_count,index_reduced_marker)) {offset_count--;continue;}
+			valid_marker<<marker<<" u"<<endl;continue;
+		}
 		else
 		{
 			fre_result.getline(pattern, CHAR_MAX_LENGTH+1);
@@ -136,6 +150,9 @@ void check_disease_model(int total_people, int chr)
 			second_allele = *tmp;
 			tmp = strtok(NULL, " ");
 			second_rate = atof(tmp);
+			
+			if(Impute == 1)
+				if(check_marker(marker_count,index_reduced_marker)) {offset_count--;continue;}
 		}
 		
 		if(first_rate < second_rate) {minor_allele = first_allele; major_allele = second_allele;}
@@ -144,7 +161,7 @@ void check_disease_model(int total_people, int chr)
 		
 		if(first_allele == '0' || second_allele == '0') {valid_marker<<marker<<" u"<<endl;continue;}//missing allele
 
-		string result = parse_ped(total_people,ped_file,marker_count,minor_allele,major_allele);
+		string result = parse_ped(total_people,ped_file,offset_count,minor_allele,major_allele);
 		valid_marker<<marker<<result<<endl;
 		
 		ped_file.clear();
@@ -157,5 +174,8 @@ void check_disease_model(int total_people, int chr)
 }
 /*int main()
 {
-	check_disease_model(1355,3);
+	vector<int> index_reduced_marker;
+	calculate_reduced_marker(3,index_reduced_marker);
+	cout<<"reduced number: "<<index_reduced_marker.size()<<endl;
+	check_disease_model(1366,3,index_reduced_marker);
 }*/

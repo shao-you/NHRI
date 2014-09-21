@@ -366,7 +366,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 			for(int j=i+1;j<=n;j++)
 			{
 				//cout<<"("<<i<<","<<j<<") "<<endl;
-				bool result = check_common_ancector(affected_people[i-1],affected_people[j-1],total_member);
+				bool result = check_common_ancector(affected_people[i-1],affected_people[j-1],max);
 				if(result) valid_pair_set.insert( 
 						make_pair(affected_people[i-1]->fam,make_pair(affected_people[i-1]->id,affected_people[j-1]->id)) );
 			}

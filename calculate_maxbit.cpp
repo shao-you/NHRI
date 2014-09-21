@@ -13,7 +13,7 @@ int find_corresponding(char* ID, map<string, int>& map_ID)
 }
 
 int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_mapping, 
-					map< pair<int,int>, int >& ID_affect, vector<int>& one_cluster_info)
+					map< pair<int,int>, int >& ID_affect, vector<int>& one_cluster_info, bool show_pedcut_info)
 //two times the number of non-founders minus the number of founders
 {	
 	char pattern[CHAR_MAX_LENGTH+1]="";
@@ -28,7 +28,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 	double threshold = Maxbit/2;
 	int start_from = 0;//從哪一個人開始(依順序)
 	int new_famID_naming = num_of_families + 1;
-	//cout<<"num_of_families"<<num_of_families<<"====";getchar();
 	int total_people = 0;
 	//at least Maxbit/2 people in a specific family, which may reach the Maxbit value
 	//===============================================
@@ -36,8 +35,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 	{ 
 		int num_member = statistic[i][0];//i == current family
 		
-		//if((2*statistic[i][1]-(num_member-statistic[i][1])) > Maxbit)
-			//cout<<(2*statistic[i][1]-(num_member-statistic[i][1]))<<" "<<i<<endl;
 		if(num_member > threshold && 
 			(2*statistic[i][1]-(num_member-statistic[i][1])) > Maxbit)//this family needs pedcut
 		{
@@ -67,7 +64,7 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 			position_end = one_cluster.tellg();
 			tmp_ped.close();
 
-			cout<<"family "<<i<<": NEED PEDCUT!!!"<<endl;//getchar();
+			if(show_pedcut_info) cout<<"family "<<i<<": NEED PEDCUT!!!"<<endl;
 			char buffer[50];
 			sprintf (buffer, "pedcut -p tmp.ped -m %d", Maxbit);
 			system(buffer);
@@ -83,7 +80,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				while(input_PedsSummary.eof() == false)
 				{
 					input_PedsSummary.getline(pattern, CHAR_MAX_LENGTH);
-					//cout<<pattern<<endl;getchar();
 					char* tmp = strtok(pattern, ",");
 				if(!tmp) break;
 					
@@ -93,14 +89,13 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 					family_pedcut_info<<new_famID_naming<<" ";
 					for(int ii=0;ii<num_people;ii++)
 					{
-						cout<<"===aaa==";
 						pedcut_fam<<new_famID_naming<<" ";
-						cout<<new_famID_naming<<" ";
+						if(show_pedcut_info) cout<<new_famID_naming<<" ";
 						input_SubPedigrees.getline(pattern, CHAR_MAX_LENGTH);
 						tmp = strtok(pattern, ",");
 						tmp = strtok(NULL, ",");//ID
 						pedcut_fam<<tmp<<" ";
-						cout<<tmp<<" ";
+						if(show_pedcut_info) cout<<tmp<<" ";
 						int ID = atoi(tmp);
 						int corr = find_corresponding(tmp,map_ID);
 						people_mapping.push_back(one_cluster_info[start_from+corr-1]);//add the offset
@@ -109,18 +104,16 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 						{
 							tmp = strtok(NULL, ",");
 							pedcut_fam<<tmp<<" ";
-							cout<<tmp<<" ";
+							if(show_pedcut_info) cout<<tmp<<" ";
 						}
 						
 						int affection = atoi(tmp);
 						ID_affect[make_pair(new_famID_naming,ID)] = affection;
 						
-						cout<<"===bbb==";
 						pedcut_fam<<endl;	
-						cout<<endl;
+						if(show_pedcut_info) cout<<endl;
 					}
-					cout<<"=================================="<<endl;
-					//cout<<num_people<<" people in this new family"<<endl;getchar();
+					if(show_pedcut_info) cout<<num_people<<" people in this new family"<<endl;
 					new_famID_naming++;
 				}
 				start_from += num_member;

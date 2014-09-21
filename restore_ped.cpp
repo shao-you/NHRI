@@ -55,59 +55,13 @@ void compare_genotype(vector<char>& result, int line, ifstream& infer_ped)
 		//character is not found once (n-1) characters have already been written to s.
 	}
 }
-void restore_ped(vector<int>* mapping, int chr, int num_marker)
+void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& index_reduced_marker)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
-	ifstream infer_ped, original_fam, input_ped,
-			 infer_dat, original_dat;//CHR3_infer.ped, all_digit.fam
+	ifstream infer_ped, original_fam, input_ped;//CHR3_infer.ped, all_digital.fam
 	ofstream restore_ped;//restore_chr3.ped
 	
 	char buffer[50];
-	//計算少了哪些marker
-		sprintf (buffer, "dir_%d/CHR%d_infer.dat", chr, chr);
-	infer_dat.open(buffer,ios::in);
-		sprintf (buffer, "CHR%d.dat", chr);
-	original_dat.open(buffer,ios::in);
-	//if(infer_dat.is_open()) cout<<"OK1"<<endl;
-	//if(original_dat.is_open()) cout<<"OK2"<<endl;
-	
-	vector<int> index_reduced_marker;
-	original_dat.getline(pattern, CHAR_MAX_LENGTH+1);//ignore first line
-	infer_dat.getline(pattern, CHAR_MAX_LENGTH+1);//ignore first line
-	streamoff position_start1 = infer_dat.tellg();
-	int which_marker = 1;
-	while(original_dat.eof() == false)
-	{
-		original_dat.getline(pattern, CHAR_MAX_LENGTH+1);
-		char* tmp = strtok(pattern, " ");
-	if(!tmp) break;	
-		string marker_name1 = strtok(NULL, " ");
-		
-		bool find_or_not = false;
-		while(infer_dat.eof() == false)
-		{
-			infer_dat.getline(pattern, CHAR_MAX_LENGTH+1);
-			char* tmp = strtok(pattern, " ");
-		if(!tmp) break;		
-			string marker_name2 = strtok(NULL, " ");
-			if(marker_name1.compare(marker_name2) == 0) 
-			{
-				position_start1 = infer_dat.tellg();//store position
-				find_or_not=true;
-				break;
-			}
-		}
-		if(find_or_not == false) 
-		{
-			index_reduced_marker.push_back(which_marker);
-			infer_dat.clear();
-			infer_dat.seekg(position_start1);
-		}
-		which_marker++;
-	}
-	infer_dat.close();
-	original_dat.close();
-	
 	//把infer_ped內容與original fam結合
 		sprintf (buffer, "dir_%d/CHR%d_infer.ped", chr, chr);
 	infer_ped.open(buffer,ios::in);

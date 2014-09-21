@@ -31,11 +31,20 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 	input_bim.open(BIM,ios::in);
 	output_fre.open("fre_result.freq",ios::out);
 	
-	bool external_freq_or_not = true;//control_config
+	bool external_freq_or_not;
 	streamoff position;
-	if(external_freq_or_not == true)
+	
+	extern char Freq_ext_result[150];
+	if(strcmp(Freq_ext_result,"0") == 0) 
 	{
-		input_fre.open("ASN_freq.txt",ios::in);
+		//cout<<"--"<<Freq_ext_result<<"--"<<endl;getchar();
+		external_freq_or_not = false;
+	}
+	else 
+	{
+		//cout<<"=="<<Freq_ext_result<<"=="<<endl;getchar();
+		external_freq_or_not = true;
+		input_fre.open(Freq_ext_result,ios::in);		
 		input_fre.getline(pattern, CHAR_MAX_LENGTH);//first line is useless
 		position = input_fre.tellg();
 	}
@@ -154,7 +163,7 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 					allele_count[1] = 1-allele_count[0];
 				}
 				//===================
-				if(external_freq_or_not == true)//use external freq file or not
+				if(external_freq_or_not)//use external freq file or not
 				{
 					char* tmp;
 					string string2;
@@ -188,7 +197,7 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 							if(strcmp(_tmp_A[0],tmp_A[0]) == 0 && strcmp(_tmp_A[1],tmp_A[1]) == 0) match_valid = 1;//ok
 							else if(strcmp(_tmp_A[0],tmp_A[1]) == 0 && strcmp(_tmp_A[1],tmp_A[0]) == 0) match_valid = 2;//ok
 						}
-						if(match_valid)//marker is matched in ASN_freq file
+						if(match_valid)//marker is matched in ASN.freq
 						{
 							tmp = strtok(NULL, " 	");//MAF
 							double MAF = atof(tmp);
@@ -213,7 +222,7 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 							//frequency.snp
 						}
 					}
-					else {}//no matched marker in ASN_freq file
+					else {}//no matched marker in ASN.freq
 				}
 				//===================
 				//output_fre<<"M "<<allele_count[3]<<endl;
@@ -234,7 +243,7 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 		output_ped.close();
 	}
 	//cout<<total_marker<<endl;getchar();//1000,4737983
-	if(external_freq_or_not == true) input_fre.close();	
+	if(external_freq_or_not) input_fre.close();	
 	//===============================================
 	fclose(input_bed);
 	input_bim.close();

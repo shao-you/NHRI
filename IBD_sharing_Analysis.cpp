@@ -14,8 +14,6 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 	s15.open(buffer,ios::in);
 		sprintf (buffer, "dir_%d/notable_grid_chr%d", chr, chr);
 	notable_grid.open(buffer,ios::out);
-	//streamoff position_start;
-	//position_start = s15.tellg();
 	
 	s15.getline(pattern, CHAR_MAX_LENGTH);//first line is ignored
 	while(s15.eof() == false)
@@ -35,8 +33,6 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 		pair<int, pair<int,int> > pair1 = make_pair(this_fam,make_pair(ID_1,ID_2));
 		pair<int, pair<int,int> > pair2 = make_pair(this_fam,make_pair(ID_2,ID_1));
 		
-		//set< pair<int, pair<int,int> > >::iterator it;
-		//it = (*valid_pair_set).find(pair1);
 		if((*valid_pair_set).find(pair1) != (*valid_pair_set).end() 
 			|| (*valid_pair_set).find(pair2) != (*valid_pair_set).end())
 		{
@@ -50,7 +46,7 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 		//if(rate > Sharing_threshold) 
 		{
 			//cout<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
-			notable_grid<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
+			notable_grid<<"position: "<<it->first<<", rate: "<<rate<<endl;
 		}
 	}
 	s15.close();

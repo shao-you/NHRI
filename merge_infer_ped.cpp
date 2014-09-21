@@ -1,6 +1,6 @@
 #include "control.h"
 
-void merge_ped(int** chr, int num_of_chrs)
+void merge_infer_ped(int** chr, int num_of_chrs)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream chr_ped[num_of_chrs];
@@ -14,7 +14,7 @@ void merge_ped(int** chr, int num_of_chrs)
 		chr_ped[i].open(buffer,ios::in);	
 	}
 	original_fam.open("all_digital.fam",ios::in);//not aligned
-	merge_ped.open("merge.ped",ios::out);
+	merge_ped.open("merged_infer.ped",ios::out);
 	
 	while(original_fam.eof() == false)//an original person each time
 	{
@@ -43,5 +43,5 @@ void merge_ped(int** chr, int num_of_chrs)
 	for(int i=0;i<3;i++) chr[i] = new int[2];
 	chr[0][0]=chr[1][0]=chr[2][0]=3; 
 	chr[0][1]=chr[1][1]=chr[2][1]=1000;
-	merge_ped(chr,3);
+	merge_infer_ped(chr,3);
 }*/
