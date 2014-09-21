@@ -17,7 +17,7 @@ cout << ((double)(exe_time)) / CLOCKS_PER_SEC <<endl;
 	//===============================================
 	cout<<"==========1=========="<<endl;;
 exe_time = clock();		
-	get_ext_files(chr,num_of_chrs);//input: "chr3_1000.bim", store in "new_map.map"
+	get_ext_files(chr,num_of_chrs);
 exe_time = clock() - exe_time;
 cout << ((double)(exe_time)) / CLOCKS_PER_SEC <<endl;	
 	//===============================================	

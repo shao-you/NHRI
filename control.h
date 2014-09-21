@@ -47,7 +47,7 @@ using namespace std;
 
 #define Disease_model 1//or 0
 #define Disease_model_threshold 0.8//每一marker, 須符合人數比例
-#define Missing_tolerance_threshold 0.9//每一marker, 非missing人數比例
+#define Missing_tolerance_threshold 0.9//每一marker, 必須非missing人數比例
 /****************** End ******************/
 	
 struct parameter
