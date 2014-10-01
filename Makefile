@@ -30,9 +30,9 @@ fam_alignment.o:fam_alignment.cpp control.h
 format_imputed_dat_ped.o:format_imputed_dat_ped.cpp control.h
 	g++ -c $(Opt)$(Warning) format_imputed_dat_ped.cpp
 pick_up_main_cluster.o:pick_up_main_cluster.cpp control.h
-	g++ -c $(Opt)$(Warning) -std=c++11 pick_up_main_cluster.cpp
+	g++ -c $(Opt)$(Warning) pick_up_main_cluster.cpp
 pedcut_fam_info.o:pedcut_fam_info.cpp control.h
-	g++ -c $(Opt)$(Warning) -std=c++11 pedcut_fam_info.cpp
+	g++ -c $(Opt)$(Warning) pedcut_fam_info.cpp
 IBD_sharing_Analysis.o:IBD_sharing_Analysis.cpp control.h
 	g++ -c $(Opt)$(Warning) IBD_sharing_Analysis.cpp
 calculate_reduced_marker.o:calculate_reduced_marker.cpp control.h

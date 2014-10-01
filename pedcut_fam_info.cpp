@@ -3,7 +3,18 @@
 struct _IND_ {
 	_IND_(int fam, int id, int father_id, int mother_id, int sex, int affection, int which_line, _IND_* next):
 		fam(fam),id(id),father_id(father_id),mother_id(mother_id),
-		sex(sex),affection(affection),which_line(which_line),next(next){}
+		sex(sex),affection(affection),which_line(which_line),next(next)
+		{
+			father = NULL;
+			mother = NULL;
+			for(int i=0;i<5;i++) spouse[i] = NULL;
+			for(int i=0;i<15;i++) child[i] = NULL;
+			num_spouse = 0;
+			num_child = 0;
+			picked = false;
+			//sib = NULL;
+			_IND_* go_through = NULL;
+		}
 	
 	int fam;
 	int id;
@@ -15,15 +26,15 @@ struct _IND_ {
 	int which_line;
 	_IND_* next;
 	
-	_IND_* father = NULL;
-	_IND_* mother = NULL;
-	_IND_* spouse[5] = {NULL};// assume a person can have up to 5 spouses
-	_IND_* child[15] = {NULL};// assume a person can have up to 15 children
-	int num_spouse = 0;
-	int num_child = 0;
-	bool picked = false;
-	//_IND_* sib = NULL;
-	_IND_* go_through = NULL;//link all people in the same cluster
+	_IND_* father;
+	_IND_* mother;
+	_IND_* spouse[5];// assume a person can have up to 5 spouses
+	_IND_* child[15];// assume a person can have up to 15 children
+	int num_spouse;
+	int num_child;
+	bool picked;
+	//_IND_* sib;
+	_IND_* go_through;//link all people in the same cluster
 };
 bool check_common_ancector(_IND_* A, _IND_* B, const int max_people)
 {
