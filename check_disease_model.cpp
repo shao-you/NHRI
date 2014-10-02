@@ -24,9 +24,9 @@ string parse_ped(int total_people, ifstream& ped_file, int offset_count, char mi
 	{
 		streampos start = ped_file.tellg();
 		ped_file.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
-		char* tmp = strtok(pattern, " ");
+		char* tmp = strtok(pattern, " 	");
 	if(!tmp) break;	
-		for(int i=0;i<5;i++) tmp = strtok(NULL, " ");
+		for(int i=0;i<5;i++) tmp = strtok(NULL, " 	");
 		int affection = atoi(tmp);
 		streamoff offset = ((tmp+strlen(tmp)+1) - pattern) + offset_count*4;
 		ped_file.clear();
@@ -124,16 +124,16 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 		double first_rate, second_rate;
 		char minor_allele, major_allele;
 		fre_result.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
-		char* tmp = strtok(pattern, " ");//M
+		char* tmp = strtok(pattern, " 	");//M
 	if(!tmp) break;	
-		tmp = strtok(NULL, " ");
+		tmp = strtok(NULL, " 	");
 		string marker = tmp;
 	
 		fre_result.getline(pattern, CHAR_MAX_LENGTH+1);
-		tmp = strtok(pattern, " ");//A
-		tmp = strtok(NULL, " ");
+		tmp = strtok(pattern, " 	");//A
+		tmp = strtok(NULL, " 	");
 		first_allele = *tmp;
-		tmp = strtok(NULL, " ");
+		tmp = strtok(NULL, " 	");
 		first_rate = atof(tmp);
 		
 		if(first_rate == 1.0)//don't need to do the checking 
@@ -145,10 +145,10 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 		else
 		{
 			fre_result.getline(pattern, CHAR_MAX_LENGTH+1);
-			tmp = strtok(pattern, " ");//A
-			tmp = strtok(NULL, " ");
+			tmp = strtok(pattern, " 	");//A
+			tmp = strtok(NULL, " 	");
 			second_allele = *tmp;
-			tmp = strtok(NULL, " ");
+			tmp = strtok(NULL, " 	");
 			second_rate = atof(tmp);
 			
 			if(Impute == 1)

@@ -13,7 +13,7 @@ struct _IND_ {
 			num_child = 0;
 			picked = false;
 			//sib = NULL;
-			_IND_* go_through = NULL;
+			go_through = NULL;
 		}
 	
 	int fam;
@@ -246,7 +246,7 @@ void pick_up_main_cluster(int** statistic, int num_of_families, vector<int>* ali
 				{
 					if((go_through_end->child[i])->picked == false)
 					{
-						if((go_through_end->child[i])->father_id==0 && (go_through_end->child[i])->mother_id==0) num_of_founder++;
+						//if((go_through_end->child[i])->father_id==0 && (go_through_end->child[i])->mother_id==0) num_of_founder++;
 						(go_through_end->child[i])->picked = true;
 						(go_through_end->child[i])->go_through = go_through_end->go_through;
 						go_through_end->go_through = go_through_end->child[i];
