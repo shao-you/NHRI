@@ -282,8 +282,10 @@ void pick_up_main_cluster(int** statistic, int num_of_families, vector<int>* ali
 			if(ptr->which_line != -9) one_cluster_info.push_back(align_info[ii][ptr->which_line]);
 			else one_cluster_info.push_back(-9);
 			
+			int affection = ptr->affection;
+			if(affection < 0) affection = 0;
 			one_cluster<<ptr->fam<<" "<<ptr->id<<" "<<ptr->father_id<<" "<<ptr->mother_id<<" "
-					   <<ptr->sex<<" "<<ptr->affection<<" "<<endl;
+					   <<ptr->sex<<" "<<affection<<" "<<endl;
 			ptr = ptr->go_through;
 		}
 		

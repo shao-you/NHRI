@@ -16,6 +16,12 @@ void switch_allele(char* str)
 		case 'G':
 			*str = 'C';
 			break;
+		/*case '1':
+			*str = '2';
+			break;
+		case '2':
+			*str = '1';
+			break;*/
 		default:
 			cout<<"some errors occur"<<endl;
 			break;					
