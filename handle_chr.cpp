@@ -31,7 +31,7 @@ void* handle_chr(void* para)
 		output_ped<<pattern;
 		
 		int which_line = (*PARA.mapping)[i];
-		if(which_line == -999)
+		if(which_line == -9)
 		{
 			for(int j=0;j<marker_num;j++) output_ped<<"0 0 ";
 			output_ped<<endl;

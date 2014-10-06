@@ -175,7 +175,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 				it = map_ID.find(pa);
 				if(it == map_ID.end()) 
 				{
-					const_head = new _IND_(head->fam,pa,0,0,1,-999,-999,const_head);
+					const_head = new _IND_(head->fam,pa,0,0,1,-9,-9,const_head);
 					extra_people++;
 					map_ID[pa] = new_line_from;
 					new_line_from++;
@@ -184,7 +184,7 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 				it = map_ID.find(ma);
 				if(it == map_ID.end()) 
 				{
-					const_head = new _IND_(head->fam,ma,0,0,2,-999,-999,const_head);
+					const_head = new _IND_(head->fam,ma,0,0,2,-9,-9,const_head);
 					extra_people++;
 					map_ID[ma] = new_line_from;
 					new_line_from++;
@@ -352,8 +352,8 @@ void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_p
 		int affected_count = 0;
 		while(ptr)
 		{
-			/*if(ptr->which_line != -999) one_cluster_info.push_back(align_info[ii][ptr->which_line]);
-			else one_cluster_info.push_back(-999);
+			/*if(ptr->which_line != -9) one_cluster_info.push_back(align_info[ii][ptr->which_line]);
+			else one_cluster_info.push_back(-9);
 			
 			one_cluster<<ptr->fam<<" "<<ptr->id<<" "<<ptr->father_id<<" "<<ptr->mother_id<<" "
 					   <<ptr->sex<<" "<<ptr->affection<<" "<<endl;*/
