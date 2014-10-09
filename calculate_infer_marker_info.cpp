@@ -1,6 +1,6 @@
 #include "control.h"
 
-void calculate_reduced_marker(int chr, vector<int>& index_reduced_marker)
+void calculate_infer_marker_info(int chr, vector<int>& index_reduced_marker, vector<int>& infer_marker_mapping)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream infer_dat, original_dat;
@@ -36,6 +36,8 @@ void calculate_reduced_marker(int chr, vector<int>& index_reduced_marker)
 		char* tmp = strtok(pattern, " ");
 	if(!tmp) break;	
 		string marker_name = strtok(NULL, " ");
+		it = name_seq.find(marker_name);
+		infer_marker_mapping.push_back(it->second);
 		name_seq.erase(marker_name);
 	}
 	

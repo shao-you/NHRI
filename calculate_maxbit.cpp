@@ -149,6 +149,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 	pedcut_fam.close();
 	one_cluster.close();
 	family_pedcut_info.close();
-	system("rm -rf tmp.ped");
+	system("rm -rf tmp.ped PedCut.log");
 	return total_people;
 }

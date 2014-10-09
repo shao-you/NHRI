@@ -63,7 +63,7 @@ void* handle_chr(void* para)
 		sprintf (buffer, "cd dir_%d && merlin -d ../CHR%d.dat -m ../new_map.map -f ../fre_result.freq -p ../CHR%d.ped --rsq 0.1 --cfreq --bits %d",chr,chr,chr,Maxbit);
 		system(buffer);
 		//output: merlin-clusters.freq, merlin-cluster-freqs.log
-		sprintf (buffer, "cd dir_%d && mv merlin-clusters.freq CHR%d.clusters",chr,chr);//merlin-clusters.freq => CHR3.clusters
+		sprintf (buffer, "cd dir_%d && mv merlin-clusters.freq CHR%d.clusters && rm -rf merlin-clusters.log",chr,chr);//merlin-clusters.freq => CHR3.clusters
 		system(buffer);
 	}
 	else
@@ -106,8 +106,9 @@ void* handle_chr(void* para)
 	}
 	//===============================================
 	cout<<"-----------4-----------"<<endl;
-	vector<int> index_reduced_marker;//store marker names erased by imputation
-	if(Impute == 1) calculate_reduced_marker(chr,index_reduced_marker);
+	vector<int> index_reduced_marker;//record markers erased by imputation
+	vector<int> infer_marker_mapping;//record mapping of markers between CHR3.dat/CHR3_infer.dat
+	if(Impute == 1) calculate_infer_marker_info(chr,index_reduced_marker,infer_marker_mapping);
 	//Disease Model
 	if(Disease_model == 1) 
 	{
@@ -117,7 +118,7 @@ void* handle_chr(void* para)
 	}
 	//===============================================
 	cout<<"-----------5-----------"<<endl;
-	if(Impute == 1) restore_ped(PARA.mapping,chr,marker_num,index_reduced_marker);
+	if(Impute == 1) restore_ped(PARA.mapping,chr,marker_num,infer_marker_mapping);
 	//output: restore_chr3.ped
 	//===============================================
 	//sprintf (buffer, "rm -rf metadata%d.ped",chr);

@@ -27,15 +27,15 @@ using namespace std;
 /***************** Start *****************/
 #define Maxbit 20
 //original files
-#define BED "chr3_1000.bed"//"chr135_merge.bed"//
-#define BIM "chr3_1000.bim"//"chr135_merge.bim"//
-#define FAM "chr3_1000.fam"//"chr135_merge.fam"//
+#define BED "ASN_sim_fam_2_5MB_inout_MAF001_MAFne0_2793.bed"//"chr3_1000.bed"//"chr135_merge.bed"//
+#define BIM "ASN_sim_fam_2_5MB_inout_MAF001_MAFne0_2793.bim"//"chr3_1000.bim"//"chr135_merge.bim"//
+#define FAM "ASN_sim_fam_2_5MB_inout_MAF001_MAFne0_2793.fam"//"chr3_1000.fam"//"chr135_merge.fam"//
 
 //worst case: not use EXTERNAL.freq
-#define Freq_file "ASN.freq"//or "ftp" or "0"
+#define Freq_file "ASN_sim_2_5MB_180_freqne0_3031.frq"//or "ftp" or "0"
 
 //worst case: generate .clusters
-#define Cluster_file "generate"//or "ftp" or "local_file"
+#define Cluster_file "local_file"//or "ftp" or "generate"
 
 #define Impute 1//or 0
 
@@ -82,7 +82,7 @@ void fam_alignment(vector<int>* align_info, int num_of_families);
 //calculate_maxbit.cpp
 //int find_corresponding(char* ID, map<string, int>& map_ID);
 int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_mapping,
-					map< pair<int,int>, int >& ID_affect, vector<int>& one_cluster_info, bool show_pedcut_info=false);
+					map< pair<int,int>, int >& ID_affect, vector<int>& one_cluster_info, bool show_pedcut_info=true);
 //ftp.cpp
 bool ftp(char* file_name);
 //handle_chr.cpp
@@ -95,11 +95,11 @@ void pick_up_main_cluster(int** statistic, int num_of_families, vector<int>* ali
 void pedcut_fam_info(int total_people, set< pair<int, pair<int,int> > >& valid_pair_set);
 //IBD_sharing_Analysis.cpp
 void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int chr);
-//calculate_reduced_marker.cpp
-void calculate_reduced_marker(int chr, vector<int>& index_reduced_marker);
+//calculate_infer_marker_info.cpp
+void calculate_infer_marker_info(int chr, vector<int>& index_reduced_marker, vector<int>& infer_marker_mapping);
 //check_disease_model.cpp
 void check_disease_model(int total_people, int chr, vector<int>& index_reduced_marker);
 //restore_ped.cpp
-void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& index_reduced_marker);
+void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& infer_marker_mapping);
 //merge_infer_ped.cpp
 void merge_infer_ped(int** chr, int num_of_chrs);

@@ -55,7 +55,7 @@ void compare_genotype(vector<char>& result, int line, ifstream& infer_ped)
 		//character is not found once (n-1) characters have already been written to s.
 	}
 }
-void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& index_reduced_marker)
+void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& infer_marker_mapping)
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream infer_ped, original_fam, input_ped;//CHR3_infer.ped, all_digital.fam
@@ -107,18 +107,23 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& ind
 		}
 		else
 		{
-			int reduced_num = index_reduced_marker.size();
-			for(int i=0;i<reduced_num;i++) 
+			const int total_allele_num = 2*num_marker;
+			char reorder_result[total_allele_num];
+			for(int i=0;i<total_allele_num;i++) reorder_result[i]='0';
+			
+			int SZ = infer_marker_mapping.size();
+			if(infer_marker_mapping.size()*2 != result.size()) cout<<"some errors occur!!"<<endl;
+			for(int i=0;i<SZ;i++) 
 			{
-				int offset = (index_reduced_marker[i]-1)*2;
-				vector<char>::iterator it = result.begin();
-				result.insert(it+offset, 2, '0');
+				int position = (infer_marker_mapping[i]-1)*2;
+				reorder_result[position] = result[2*i];
+				reorder_result[position+1] = result[2*1+1];
 			}
-			int size = result.size();
-			for(int i=0;i<size;i++) 
+			
+			for(int i=0;i<total_allele_num;i++) 
 			{
-				if(result[i] == '.') restore_ped<<"0 ";
-				else restore_ped<<result[i]<<" ";
+				if(reorder_result[i] == '.') restore_ped<<"0 ";
+				else restore_ped<<reorder_result[i]<<" ";
 			}
 		}
 		restore_ped<<endl;
@@ -131,10 +136,14 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& ind
 }
 /*int main()
 {
-	int size = 1371;
+	int size = 2060;
 	srand(time(NULL));
 	
 	vector<int> mapping;
 	for(int i=0;i<size;i++) mapping.push_back((rand()%size)+1);
-	restore_ped(&mapping,3,1000);
+	
+	vector<int> index_reduced_marker;
+	vector<int> infer_marker_mapping;
+	calculate_infer_marker_info(1,index_reduced_marker,infer_marker_mapping);
+	restore_ped(&mapping,1,2793,infer_marker_mapping);
 }*/

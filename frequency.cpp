@@ -21,10 +21,7 @@ void switch_allele(char* str)
 			break;
 		case '2':
 			*str = '1';
-			break;*/
-		default:
-			cout<<"some errors occur"<<endl;
-			break;					
+			break;*/			
 	}
 }
 

@@ -1,15 +1,12 @@
 NHRI  
 ====  
-Install Pedcut (http://mga.bionet.nsc.ru/soft/)  
-Install Merlin (http://www.sph.umich.edu/csg/abecasis/merlin/download/)  
-(the names must be 'pedcut' and 'merlin')  
+preliminary  
 
-git init  
-git clone https://github.com/shao-you/NHRI.git  
-
-put the original file (bed/bim/fam) in the working directory  
-
-	(*)Every input/output should be Unix format.  
+	Install Pedcut (http://mga.bionet.nsc.ru/soft/)  
+	Install Merlin (http://www.sph.umich.edu/csg/abecasis/merlin/download/)  
+		(*)names must be 'pedcut' and 'merlin'  
+	git clone https://github.com/shao-you/NHRI.git && cd NHRI  
+	put the original file (bed/bim/fam/EXTERNAL.freq/EXTERNAL.clusters) in the working directory  
 	
 configure the control file (control.h) for working details:  
 
@@ -49,7 +46,7 @@ outputs: (X: chromosome name)
 	"family_pedcut_info" (record the mapping of new and old family IDs while pedcut executes)  
 	"CHRX.dat", CHRX.ped"  
 	
-	(*)some files will be stored in different directories (Eg: dir_X)  
+	(*)some files will be stored in different directories (E.g., dir_X)  
 	"CHRX.clusters"  
 	Imputation: "CHRX_infer.ped", "CHRX_infer.dat"  
 		(*)Imputation is time consuming.  
@@ -70,6 +67,14 @@ Reference:
 	http://www.sph.umich.edu/csg/abecasis/merlin/tour/input_files.html  
 	http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml  
 
+Remark:  
+
+	CHRX.ped/CHRX_infer.ped: fam順序會變  
+	CHRX.ped/CHRX_infer.ped: marker順序會變  
+	Every input/output should be Unix format  
+	Pedcut結果每次不同
+	fre_result.freq中，若一marker中只有一allele (frequency = 1)，該marker在imputation會被剔除
+
 Pending issues:  
 
 	time calculating  
@@ -77,4 +82,3 @@ Pending issues:
 	marker name: 'chr3:12345'  
 	only find chrX in EXTERNAL.freq  
 	put EXTERNAL.freq file into memory for optimization  
-
