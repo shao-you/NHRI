@@ -39,10 +39,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 			(2*statistic[i][1]-(num_member-statistic[i][1])) > Maxbit)//this family needs pedcut
 		{
 			//未來可用thread同步進行多個pedcut(需處理相同檔名輸出問題)
-			streamoff position_start;
-			streamoff position_end;
-			position_start = one_cluster.tellg();
-			
 			map<string, int> map_ID;
 			map<string, int>::iterator it;
 			
@@ -61,7 +57,6 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				if(it == map_ID.end()) map_ID[tmp] = j+1;//record (ID,line)
 			}
 			family_pedcut_info<<family_name<<": ";
-			position_end = one_cluster.tellg();
 			tmp_ped.close();
 
 			if(show_pedcut_info) cout<<"family "<<i<<": NEED PEDCUT!!!"<<endl;
@@ -121,16 +116,11 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 				input_PedsSummary.close();
 				system("rm -rf SubPedigrees.csv");
 				system("rm -rf PedsSummary.csv");
-				
-				one_cluster.clear();
-				one_cluster.seekg(position_end);
 			}
 			else 
 			{
 				//goto pedcut_is_futile;
 				start_from += num_member;
-				one_cluster.clear();
-				one_cluster.seekg(position_end);
 			}
 			family_pedcut_info<<endl;
 		}

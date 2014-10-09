@@ -45,7 +45,7 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 		double rate = (double)it->second/num_of_pair;
 		//if(rate > Sharing_threshold) 
 		{
-			//cout<<"position: "<<it->first<<" ,rate: "<<rate<<endl;
+			//cout<<"position: "<<it->first<<", rate: "<<rate<<endl;
 			notable_grid<<"position: "<<it->first<<", rate: "<<rate<<endl;
 		}
 	}

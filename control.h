@@ -21,7 +21,7 @@ using namespace std;
 
 #define max_num_of_family 2000
 #define max_chr 46//23 pairs
-#define CHAR_MAX_LENGTH 10000//max accommodate 40000 people
+#define CHAR_MAX_LENGTH 15000//max accommodate 60000 people
 
 /******** User Defined Parameters ********/
 /***************** Start *****************/

@@ -15,37 +15,31 @@ void calculate_reduced_marker(int chr, vector<int>& index_reduced_marker)
 	
 	original_dat.getline(pattern, CHAR_MAX_LENGTH+1);//ignore first line
 	infer_dat.getline(pattern, CHAR_MAX_LENGTH+1);//ignore first line
-	streamoff position_start1 = infer_dat.tellg();
+	
+	map<string, int> name_seq;
+	map<string, int>::iterator it;
+	
 	int which_marker = 1;
 	while(original_dat.eof() == false)
 	{
 		original_dat.getline(pattern, CHAR_MAX_LENGTH+1);
 		char* tmp = strtok(pattern, " ");
 	if(!tmp) break;	
-		string marker_name1 = strtok(NULL, " ");
-		
-		bool find_or_not = false;
-		while(infer_dat.eof() == false)
-		{
-			infer_dat.getline(pattern, CHAR_MAX_LENGTH+1);
-			char* tmp = strtok(pattern, " ");
-		if(!tmp) break;		
-			string marker_name2 = strtok(NULL, " ");
-			if(marker_name1.compare(marker_name2) == 0) 
-			{
-				position_start1 = infer_dat.tellg();//store position
-				find_or_not=true;
-				break;
-			}
-		}
-		if(find_or_not == false) 
-		{
-			index_reduced_marker.push_back(which_marker);
-			infer_dat.clear();
-			infer_dat.seekg(position_start1);
-		}
+		string marker_name = strtok(NULL, " ");
+		name_seq[marker_name] = which_marker;
 		which_marker++;
 	}
+	
+	while(infer_dat.eof() == false)
+	{
+		infer_dat.getline(pattern, CHAR_MAX_LENGTH+1);
+		char* tmp = strtok(pattern, " ");
+	if(!tmp) break;	
+		string marker_name = strtok(NULL, " ");
+		name_seq.erase(marker_name);
+	}
+	
+	for (it=name_seq.begin(); it!=name_seq.end(); ++it) index_reduced_marker.push_back(it->second);
 	infer_dat.close();
 	original_dat.close();
 }

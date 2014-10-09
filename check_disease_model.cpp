@@ -9,8 +9,8 @@ bool check_marker(int marker, vector<int>& index_reduced_marker)
 string parse_ped(int total_people, ifstream& ped_file, int offset_count, char minor_allele, char major_allele)
 {//minor_allele,major_allele不為'0'
 	//check recessive & dominant models
-	int missing_tolerance_people = (1-Missing_tolerance_threshold)*total_people;
-	int model_tolerance_people = (1-Disease_model_threshold)*total_people;
+	const int missing_tolerance_people = (1-Missing_tolerance_threshold)*total_people;
+	const int model_tolerance_people = (1-Disease_model_threshold)*total_people;
 	
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	int recessive_count = 0;
