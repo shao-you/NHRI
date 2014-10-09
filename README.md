@@ -1,6 +1,6 @@
 NHRI  
 ====  
-preliminary  
+Preliminary  
 
 	Install Pedcut (http://mga.bionet.nsc.ru/soft/)  
 	Install Merlin (http://www.sph.umich.edu/csg/abecasis/merlin/download/)  
@@ -8,7 +8,7 @@ preliminary
 	git clone https://github.com/shao-you/NHRI.git && cd NHRI  
 	put the original file (bed/bim/fam/EXTERNAL.freq/EXTERNAL.clusters) in the working directory  
 	
-configure the control file (control.h) for working details:  
+Configure the control file (control.h) for working details  
 
 	Freq_file  
 		"0", 不使用external freq。  
@@ -33,12 +33,12 @@ configure the control file (control.h) for working details:
 		Disease_model_threshold 0.8//每一marker, 須符合人數比例  
 		Missing_tolerance_threshold 0.9//每一marker, 必須非missing人數比例  
 
-compile & run  
+Compile & run  
 
 	make ('make clean' is also supported)  
 	./nhri (# of threads depends on # of chromosomes)  
 	
-outputs: (X: chromosome name)  
+Outputs (X: chromosome name)  
 
 	"original.fam" -> "all_digital.fam" -> "all_digital_align.fam" -> "one_cluster.fam" -> "pedcut.fam"  
 	"new_map.map"  
@@ -62,12 +62,12 @@ outputs: (X: chromosome name)
 		(*)If imputation is performed, the program uses "CHRX_infer.ped" as input; otherwise, uses "CHRX.ped". 
 	Merge imputed file (imputation is performed): "merged_infer.ped"
 
-Reference:  
+Reference  
 
 	http://www.sph.umich.edu/csg/abecasis/merlin/tour/input_files.html  
 	http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml  
 
-Remark:  
+Remark  
 
 	CHRX.ped/CHRX_infer.ped: fam順序會變  
 	CHRX.ped/CHRX_infer.ped: marker順序會變  
@@ -75,7 +75,7 @@ Remark:
 	Pedcut結果每次不同
 	fre_result.freq中，若一marker中只有一allele (frequency = 1)，該marker在imputation會被剔除
 
-Pending issues:  
+Pending issues  
 
 	time calculating  
 	process how many markers each time in 'frequency.cpp'  
