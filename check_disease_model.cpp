@@ -175,7 +175,8 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 /*int main()
 {
 	vector<int> index_reduced_marker;
-	calculate_reduced_marker(3,index_reduced_marker);
+	vector<int> infer_marker_mapping;
+	calculate_infer_marker_info(3,index_reduced_marker,infer_marker_mapping);
 	cout<<"reduced number: "<<index_reduced_marker.size()<<endl;
 	check_disease_model(1366,3,index_reduced_marker);
 }*/

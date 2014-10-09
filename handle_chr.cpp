@@ -63,7 +63,7 @@ void* handle_chr(void* para)
 		sprintf (buffer, "cd dir_%d && merlin -d ../CHR%d.dat -m ../new_map.map -f ../fre_result.freq -p ../CHR%d.ped --rsq 0.1 --cfreq --bits %d",chr,chr,chr,Maxbit);
 		system(buffer);
 		//output: merlin-clusters.freq, merlin-cluster-freqs.log
-		sprintf (buffer, "cd dir_%d && mv merlin-clusters.freq CHR%d.clusters && rm -rf merlin-clusters.log",chr,chr);//merlin-clusters.freq => CHR3.clusters
+		sprintf (buffer, "cd dir_%d && mv merlin-clusters.freq CHR%d.clusters",chr,chr);//merlin-clusters.freq => CHR3.clusters
 		system(buffer);
 	}
 	else
@@ -121,23 +121,23 @@ void* handle_chr(void* para)
 	if(Impute == 1) restore_ped(PARA.mapping,chr,marker_num,infer_marker_mapping);
 	//output: restore_chr3.ped
 	//===============================================
-	//sprintf (buffer, "rm -rf metadata%d.ped",chr);
+	//sprintf (buffer, "rm -rf metadata%d.ped", chr);
 	//system(buffer);
-	//sprintf (buffer, "rm -rf CHR%d.ped",chr);
+	//sprintf (buffer, "rm -rf CHR%d.ped", chr);
 	//system(buffer);
-	//sprintf (buffer, "rm -rf CHR%d.dat",chr);
+	//sprintf (buffer, "rm -rf CHR%d.dat", chr);
 	//system(buffer);
 	
 	//sprintf (buffer, "cd dir_%d && rm -rf CHR%d.clusters", chr, chr);
 	//system(buffer);
 	//sprintf (buffer, "cd dir_%d && rm -rf CHR%d_infer.ped", chr, chr);
 	//system(buffer);
-	//sprintf (buffer, "cd dir_%d && rm -rf CHR%d_infer.ped", chr, chr);
+	//sprintf (buffer, "cd dir_%d && rm -rf CHR%d_infer.dat", chr, chr);
 	//system(buffer);
-	//sprintf (buffer, "cd dir_%d && rm -rf merlin-cluster-freqs.log", chr);
-	//system(buffer);
-	//sprintf (buffer, "cd dir_%d && rm -rf merlin-clusters.log", chr);
-	//system(buffer);
+	sprintf (buffer, "cd dir_%d && rm -rf merlin-cluster-freqs.log", chr);
+	system(buffer);
+	sprintf (buffer, "cd dir_%d && rm -rf merlin-clusters.log", chr);
+	system(buffer);
 	//sprintf (buffer, "cd dir_%d && rm -rf merlin-infer.ped", chr);
 	//system(buffer);
 	//sprintf (buffer, "cd dir_%d && rm -rf merlin-infer.dat", chr);

@@ -111,22 +111,18 @@ int calculate_maxbit(int num_of_families, int** statistic, vector<int>& people_m
 					if(show_pedcut_info) cout<<num_people<<" people in this new family"<<endl;
 					new_famID_naming++;
 				}
-				start_from += num_member;
 				input_SubPedigrees.close();
 				input_PedsSummary.close();
 				system("rm -rf SubPedigrees.csv");
 				system("rm -rf PedsSummary.csv");
 			}
-			else 
-			{
-				//goto pedcut_is_futile;
-				start_from += num_member;
-			}
+			else {}//pedcut is futile
+			
+			start_from += num_member;
 			family_pedcut_info<<endl;
 		}
 		else//no need pedcut
 		{
-		pedcut_is_futile:
 			for(int j=0;j<num_member;j++)
 			{
 				one_cluster.getline(pattern, CHAR_MAX_LENGTH);

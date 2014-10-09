@@ -117,7 +117,7 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& inf
 			{
 				int position = (infer_marker_mapping[i]-1)*2;
 				reorder_result[position] = result[2*i];
-				reorder_result[position+1] = result[2*1+1];
+				reorder_result[position+1] = result[2*i+1];
 			}
 			
 			for(int i=0;i<total_allele_num;i++) 
