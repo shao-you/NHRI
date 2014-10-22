@@ -30,7 +30,7 @@ void compare_dosage(vector<double>& result_dosage, int line, ifstream& infer_dos
 					if(flag == 0) result_dosage.push_back(dosage);
 					else//flag == 1 
 					{
-						result_dosage[index] = (result_dosage[index]+dosage)/2;
+						result_dosage[index] += dosage;
 						index++;
 					}
 					tmp = strtok(NULL, " ");
@@ -46,7 +46,7 @@ void compare_dosage(vector<double>& result_dosage, int line, ifstream& infer_dos
 					if(flag == 0) result_dosage.push_back(dosage);
 					else//flag == 1  
 					{
-						result_dosage[index] = (result_dosage[index]+dosage)/2;
+						result_dosage[index] += dosage;
 						index++;						
 					}
 					tmp = strtok(NULL, " ");
@@ -150,6 +150,8 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& inf
 	if(!tmp) break;	
 		vector<char> result;
 		vector<double> result_dosage;
+		int duplicate_people = 0;
+		
 		for(int i=0;i<total_people_after_pedcut;i++) 
 			if((*mapping)[i] == which_line) 
 			{
@@ -160,6 +162,7 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& inf
 				compare_dosage(result_dosage,i+1,infer_dosage);
 				infer_dosage.clear();
 				infer_dosage.seekg(position_start4);
+				duplicate_people++;
 			}
 		
 		if(result.size() == 0)//依照原來內容填入(不存在於pedcut fam的人)
@@ -192,7 +195,7 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& inf
 				reorder_result[position+1] = result[2*i+1];
 				
 				int position_dosage = (infer_marker_mapping[i]-1);
-				reorder_result_dosage[position_dosage] = result_dosage[i];
+				reorder_result_dosage[position_dosage] = result_dosage[i]/duplicate_people;
 			}
 			
 			for(int i=0;i<total_allele_num;i++) 
