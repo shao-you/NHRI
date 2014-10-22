@@ -50,6 +50,7 @@ Outputs (X: chromosome name)
 	"CHRX.clusters"  
 	Imputation: "CHRX_infer.ped", "CHRX_infer.dat"  
 		(*)Imputation is time consuming.  
+	"CHRX_infer.dosage"  
 	Linkage Analysis: "CHRX_linkage.txt"  
 	IBD Sharing Analysis: "notable_grid_chrX"  
 	Disease Model: "valid_marker_chrX"  
@@ -60,7 +61,7 @@ Outputs (X: chromosome name)
 		r:   r符合  
 		d r: d/r皆符合  
 		(*)If imputation is performed, the program uses "CHRX_infer.ped" as input; otherwise, uses "CHRX.ped". 
-	Merge imputed file (imputation is performed): "merged_infer.ped"
+	Merge imputed file (imputation is performed): "merged_infer.ped", "merged_infer.dosage"  
 
 Reference  
 

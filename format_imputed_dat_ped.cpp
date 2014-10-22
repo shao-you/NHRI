@@ -4,7 +4,7 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 {
 	char pattern[CHAR_MAX_LENGTH+1]="";
 	ifstream merlin_ped, merlin_dat;
-	ofstream infer_ped, infer_dat;
+	ofstream infer_ped, infer_dat, infer_dosage;
 	char buffer[50];
 		sprintf (buffer, "dir_%d/merlin-infer.ped", chr);
 	merlin_ped.open(buffer,ios::in);
@@ -15,6 +15,8 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 	infer_ped.open(buffer,ios::out);
 		sprintf (buffer, "dir_%d/CHR%d_infer.dat", chr, chr);
 	infer_dat.open(buffer,ios::out);
+		sprintf(buffer, "dir_%d/CHR%d_infer.dosage", chr, chr);
+	infer_dosage.open(buffer, ios::out);
 	
 	infer_dat<<"A "<<"disease"<<endl;
 	int num_marker = 0;
@@ -45,12 +47,15 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 		int ID = atoi(tmp);
 		
 		infer_ped<<fam<<" "<<ID<<" ";
+		infer_dosage<<fam<<" "<<ID<<" ";
 		for(int k=0;k<3;k++)
 		{
 			tmp = strtok(NULL, " 	");
 			infer_ped<<tmp<<" ";
+			infer_dosage<<tmp<<" ";
 		}
 		infer_ped<<(*ID_affect)[make_pair(fam,ID)]<<" ";
+		infer_dosage<<(*ID_affect)[make_pair(fam, ID)]<<" ";
 		
 		merlin_ped.clear();
 		merlin_ped.seekg(position_start);//restore the position
@@ -65,9 +70,19 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 			infer_ped<<pattern[0]<<" ";
 			length = strlen(pattern);
 			infer_ped<<pattern[length-1]<<" ";
+			
+			char* pch = strtok(pattern, " 	");
+			pch = strtok(NULL, " 	");
+			double dosage = atof(pch);
+			infer_dosage<<dosage<<" ";
 		}
 		merlin_ped.getline(pattern, CHAR_MAX_LENGTH);//last, delim is '\n'
 		infer_ped<<pattern[0]<<" ";
+		
+		char* pch = strtok(pattern, " 	");
+		pch = strtok(NULL, " 	");
+		double dosage = atof(pch);
+		infer_dosage<<dosage<<" ";
 			
 		/*tmp = strtok(NULL," /");
 		while(tmp)//一組四個為單位
@@ -79,9 +94,11 @@ void format_imputed_dat_ped(map< pair<int,int>, int >* ID_affect, int chr)//merl
 			tmp = strtok(NULL," /");
 		}*/
 		infer_ped<<endl;
+		infer_dosage<<endl;
 	}
 	merlin_ped.close();
 	merlin_dat.close();
 	infer_ped.close();
 	infer_dat.close();
+	infer_dosage.close();
 }
