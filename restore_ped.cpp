@@ -146,6 +146,7 @@ void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& inf
 		//cout<<which_line<<endl;
 		original_fam.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
 		//restore_ped<<pattern;
+		//restore_dosage<<pattern;
 		char* tmp = strtok(pattern, " ");
 	if(!tmp) break;	
 		vector<char> result;
