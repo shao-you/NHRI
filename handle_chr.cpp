@@ -113,7 +113,7 @@ void* handle_chr(void* para)
 	if(Disease_model == 1) 
 	{
 		//If imputation is performed, use CHR3_infer.ped as input; otherwise, use CHR3.ped
-		check_disease_model(size,chr,index_reduced_marker);//check recessive & dominant models
+		check_disease_model(size,chr,index_reduced_marker,infer_marker_mapping);//check recessive & dominant models
 		//output: valid_marker_chr3
 	}
 	//===============================================

@@ -98,7 +98,7 @@ void IBD_sharing_Analysis(set< pair<int, pair<int,int> > >* valid_pair_set, int 
 //calculate_infer_marker_info.cpp
 void calculate_infer_marker_info(int chr, vector<int>& index_reduced_marker, vector<int>& infer_marker_mapping);
 //check_disease_model.cpp
-void check_disease_model(int total_people, int chr, vector<int>& index_reduced_marker);
+void check_disease_model(int total_people, int chr, vector<int>& index_reduced_marker, vector<int>& infer_marker_mapping);
 //restore_ped.cpp
 void restore_ped(vector<int>* mapping, int chr, int num_marker, vector<int>& infer_marker_mapping);
 //merge_infer_ped.cpp
