@@ -104,7 +104,7 @@ string parse_ped(vector<int>& infer_marker_mapping, int total_people, ifstream& 
 	}
 	if(flag_recessive==true && flag_dominant==false) return " r";
 	else if(flag_recessive==false && flag_dominant==true) return " d";
-	else return " d r";//flag_recessive==true && flag_dominant==true
+	else return " d,r";//flag_recessive==true && flag_dominant==true
 }
 void check_disease_model(int total_people, int chr, vector<int>& index_reduced_marker, vector<int>& infer_marker_mapping)
 {
@@ -168,12 +168,19 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 		else if(first_rate == second_rate) {valid_marker<<marker<<" u"<<endl;continue;}//two alleles have the same rate
 		
 		if(first_allele == '0' || second_allele == '0') {valid_marker<<marker<<" u"<<endl;continue;}//missing allele
-
-		string result = parse_ped(infer_marker_mapping,total_people,ped_file,marker_count,minor_allele,major_allele);
-		valid_marker<<marker<<result<<endl;
+		bool flag = true;
 		
+do_again:
+		string result = parse_ped(infer_marker_mapping,total_people,ped_file,marker_count,minor_allele,major_allele);
 		ped_file.clear();
 		ped_file.seekg(position_start);
+		if(flag==true && minor_allele==major_allele && result.compare(" n")==0) 
+		{
+			swap(minor_allele,major_allele);
+			flag = false;
+			goto do_again;
+		}
+		valid_marker<<marker<<result<<endl;
 	}
 	
 	fre_result.close();
