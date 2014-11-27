@@ -212,12 +212,12 @@ void frequency(int total_people, int** chr, int num_of_chrs)
 							if(match_valid == 1)
 							{
 								allele_count[0] = allele_count[0]*(n1/(n1+n2)) + MAF*(n2/(n1+n2));
-								allele_count[1] = allele_count[1]*(n1/(n1+n2)) + (1-MAF)*(n2/(n1+n2));
+								allele_count[1] = 1=allele_count[0];//allele_count[1]*(n1/(n1+n2)) + (1-MAF)*(n2/(n1+n2));
 							}
 							else if(match_valid == 2)
 							{
 								allele_count[0] = allele_count[0]*(n1/(n1+n2)) + (1-MAF)*(n2/(n1+n2));
-								allele_count[1] = allele_count[1]*(n1/(n1+n2)) + (MAF)*(n2/(n1+n2));					
+								allele_count[1] = 1=allele_count[0];//allele_count[1]*(n1/(n1+n2)) + (MAF)*(n2/(n1+n2));
 							}
 						}
 						else
