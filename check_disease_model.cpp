@@ -28,15 +28,17 @@ string parse_ped(vector<int>& infer_marker_mapping, int total_people, ifstream& 
 	int which_marker;
 	if(Impute == 1) which_marker = which_marker_in_infer_ped(infer_marker_mapping,marker_count);
 	else if(Impute == 0) which_marker = marker_count-1;	
-	
+
 	while(ped_file.eof() == false)//check a person each time
 	{
 		streampos start = ped_file.tellg();
+		//memset(pattern,'\0',sizeof(pattern));
 		ped_file.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
-		char* tmp = strtok(pattern, " 	");
+		char* saveptr;
+		char* tmp = strtok_r(pattern, " 	",&saveptr);
 	if(!tmp) break;	
-		for(int i=0;i<5;i++) tmp = strtok(NULL, " 	");
-		int affection = atoi(tmp);
+		for(int i=0;i<5;i++) tmp = strtok_r(NULL, " 	",&saveptr);
+		int affection = atoi(tmp);//strtol(tmp,NULL,10);//
 		
 		streamoff offset = ((tmp+strlen(tmp)+1) - pattern) + which_marker*4;
 		ped_file.clear();
@@ -46,11 +48,14 @@ string parse_ped(vector<int>& infer_marker_mapping, int total_people, ifstream& 
 		char first = ped_file.get();
 		ped_file.get();//' '
 		char second = ped_file.get();
-		
-		do{
+
+		/*do{
 			ped_file.clear();
+			//memset(pattern,'\0',sizeof(pattern));
 			ped_file.getline(pattern, CHAR_MAX_LENGTH+1);
-		}while((ped_file.rdstate() & std::ifstream::failbit ) != 0);//把剩下getline完(至少還剩' ')
+		}while((ped_file.rdstate() & std::ifstream::failbit ) != 0);//把剩下getline完(至少還剩' ')*/
+		string line;
+		std::getline(ped_file,line);
 
 		if(first=='0' || second=='0')//allele missing 
 		{
@@ -124,27 +129,31 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 	streampos position_start;
 	position_start = ped_file.tellg();
 	int marker_count = 0;
-	
+
 	while(fre_result.eof() == false)//check a marker each time
 	{
 		marker_count++;
 		char first_allele, second_allele;
 		double first_rate, second_rate;
 		char minor_allele, major_allele;
+		
+		//memset(pattern,'\0',sizeof(pattern));
 		fre_result.getline(pattern, CHAR_MAX_LENGTH+1);//until CHAR_MAX_LENGTH byte
-		char* tmp = strtok(pattern, " 	");//M
+		char* saveptr;
+		char* tmp = strtok_r(pattern, " 	",&saveptr);//M
 	if(!tmp) break;	
-		tmp = strtok(NULL, " 	");
+		tmp = strtok_r(NULL, " 	",&saveptr);
 		string marker = tmp;
 	
+		//memset(pattern,'\0',sizeof(pattern));
 		fre_result.getline(pattern, CHAR_MAX_LENGTH+1);
-		tmp = strtok(pattern, " 	");//A
-		tmp = strtok(NULL, " 	");
+		tmp = strtok_r(pattern, " 	",&saveptr);//A
+		tmp = strtok_r(NULL, " 	",&saveptr);
 		first_allele = *tmp;
-		tmp = strtok(NULL, " 	");
-		first_rate = atof(tmp);
-		
-		if(first_rate == 1.0)//don't need to do the checking 
+		tmp = strtok_r(NULL, " 	",&saveptr);
+		first_rate = atof(tmp);//strtof(tmp,NULL);//
+
+		if(first_rate == 1.0)//don't need to do the checking
 		{
 			if(Impute == 1)
 				if(check_marker(marker_count,index_reduced_marker)) continue;
@@ -152,13 +161,14 @@ void check_disease_model(int total_people, int chr, vector<int>& index_reduced_m
 		}
 		else
 		{
+			//memset(pattern,'\0',sizeof(pattern));
 			fre_result.getline(pattern, CHAR_MAX_LENGTH+1);
-			tmp = strtok(pattern, " 	");//A
-			tmp = strtok(NULL, " 	");
+			tmp = strtok_r(pattern, " 	",&saveptr);//A
+			tmp = strtok_r(NULL, " 	",&saveptr);
 			second_allele = *tmp;
-			tmp = strtok(NULL, " 	");
-			second_rate = atof(tmp);
-			
+			tmp = strtok_r(NULL, " 	",&saveptr);
+			second_rate = atof(tmp);//strtof(tmp,NULL);//
+
 			if(Impute == 1)
 				if(check_marker(marker_count,index_reduced_marker)) continue;
 		}
@@ -182,7 +192,6 @@ do_again:
 		}
 		valid_marker<<marker<<result<<endl;
 	}
-	
 	fre_result.close();
 	ped_file.close();
 	valid_marker.close();
